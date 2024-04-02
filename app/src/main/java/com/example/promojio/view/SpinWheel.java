@@ -5,31 +5,46 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.promojio.R;
 
 import java.util.Random;
 
-public class SpinWheel extends AppCompatActivity {
+public class SpinWheel extends Fragment {
 
     private ImageView wheelImageView;
     private Random random = new Random();
     private long lastSpinDuration = 0;
     private int lastAngle = 0;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.wheel);
+    // Empty default constructor
+    public SpinWheel() {
+    }
 
-        wheelImageView = findViewById(R.id.wheelImageView);
-        Button spinButton = findViewById(R.id.spinButton);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.wheel, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        wheelImageView = view.findViewById(R.id.wheelImageView);
+        Button spinButton = view.findViewById(R.id.spinButton);
 
         spinButton.setOnClickListener(v -> spinWheel());
     }
@@ -37,10 +52,9 @@ public class SpinWheel extends AppCompatActivity {
     private void spinWheel() {
         int angle = 360*12 + (random.nextInt(360) + 1); // Ensures at least 4 rotations, plus a random amount.
 
-
         Log.d("SpinWheel", "angle: " + angle);
 
-        lastSpinDuration = 1000 + random.nextInt(1000); // Duration between 1 and 2 seconds
+        lastSpinDuration = 3000 + random.nextInt(2000); // Duration between 3 and 5 seconds
 
         ObjectAnimator animator = ObjectAnimator.ofFloat(wheelImageView, "rotation", lastAngle, angle + lastAngle);
         animator.setDuration(lastSpinDuration);
@@ -53,7 +67,6 @@ public class SpinWheel extends AppCompatActivity {
                 lastAngle = lastAngle % 360; // Keep the angle within 0-359 degrees
                 Log.d("SpinWheel", "Final angle: " + lastAngle);
                 showResultPopup();
-
             }
         });
         animator.start();
@@ -86,7 +99,7 @@ public class SpinWheel extends AppCompatActivity {
             prize = "You won 50 coins!";
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(SpinWheel.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         if (prize.equals("Please try again")) {
             builder.setTitle("Sorry :(");
         }

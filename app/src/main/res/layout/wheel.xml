@@ -12,7 +12,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:elevation="4dp"
-        android:fontFamily="@font/monserrat_bold"
         android:gravity="center"
         android:padding="16dp"
         android:text="Lucky Spin!"
