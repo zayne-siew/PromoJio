@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/mHome"
+        android:title="@string/nav_home"
+        android:icon="@drawable/ic_home_24" />
+    <item android:id="@+id/mPromos"
+        android:title="@string/nav_promos"
+        android:icon="@drawable/ic_bookmarks_24" />
+    <item android:id="@+id/mAdd"
+        android:title="@string/nav_add"
+        android:icon="@drawable/ic_add_24" />
+    <item android:id="@+id/mLeaderboard"
+        android:title="@string/nav_leaderboard"
+        android:icon="@drawable/ic_leaderboard_24" />
+    <item android:id="@+id/mSpinner"
+        android:title="@string/nav_spinner"
+        android:icon="@drawable/ic_gift_24" />
+
+</menu>
