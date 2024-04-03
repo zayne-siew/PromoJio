@@ -1,22 +1,31 @@
 package com.example.promojio.view.promocode;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.promojio.R;
 
-public class SubActivitypromocode extends AppCompatActivity {
+public class SubActivitypromocode extends Fragment {
+    public SubActivitypromocode() {
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.promocode);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.promocode, container, false);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-    /*
-            String Brand = getIntent().getStringExtra("Brand");
-            Integer discount = getIntent().getIntExtra("Discount", )*/
-
+        // Your initialization code can go here
     }
+}

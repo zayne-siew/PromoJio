@@ -1,6 +1,5 @@
 package com.example.promojio.view.promocode;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.promojio.R;
+import com.example.promojio.model.promocode.promocode_model;
 
 import java.util.List;
 

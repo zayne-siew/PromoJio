@@ -1,4 +1,4 @@
-package com.example.promojio.view.promocode;
+package com.example.promojio.model.promocode;
 
 public class promocode_model {
     //the offer: free,off, off second pair
