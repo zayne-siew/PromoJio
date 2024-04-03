@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Layout for the screen to scroll vertically -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="ALL"
+                android:textColor="@color/black"
+                style="?android:attr/buttonBarButtonStyle" />
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="FOOD"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/black"
+                style="?android:attr/buttonBarButtonStyle" />
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="SHOP"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/black"
+                style="?android:attr/buttonBarButtonStyle" />
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="TRAVEL"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/black"
+                style="?android:attr/buttonBarButtonStyle" />
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="OTHER"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/black"
+                style="?android:attr/buttonBarButtonStyle" />
+        </LinearLayout>
+
+
+
+
+    </HorizontalScrollView>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <Button
+        android:id="@+id/available"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/orange"
+        android:layout_marginLeft="5dp"
+        android:text="@string/available"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        />
+    <Button
+        android:id="@+id/expiry"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/orange"
+        android:layout_marginLeft="5dp"
+        android:text="@string/expiry" />
+</LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerviewactive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        />
+
+
+<!--
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerviewexpiring"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/expiry"
+        tools:layout_editor_absoluteX="-105dp"
+        android:scrollbars="vertical"/>-->
+
+
+
+
+
+</LinearLayout>
+
+
+
+
+
+
