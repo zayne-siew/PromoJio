@@ -3,6 +3,7 @@ package com.example.promojio.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -11,24 +12,37 @@ import nl.joery.animatedbottombar.AnimatedBottomBar;
 
 import com.example.promojio.R;
 import com.example.promojio.view.home.HomeFragment;
+import com.example.promojio.view.promocode.promocode_main;
 import com.example.promojio.view.scanner.ScannerFragment;
+import com.example.promojio.view.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     private AnimatedBottomBar bottomNavigationView;
 
     private HomeFragment homeFragment;
+    private promocode_main promoFragment;
     private ScannerFragment scannerFragment;
+    private SpinWheel spinFragment;
 
     private final static String LOG_TAG = "LOGCAT_MainActivity";
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Retrieve the Intent from the login activity
+        Intent loginIntent = getIntent();
+        this.userID = loginIntent.getStringExtra(LoginActivity.USER_ID);
+        // TODO query database with user ID
+
+        // Initialise fragments in main activity
         homeFragment = new HomeFragment();
+        promoFragment = new promocode_main();
         scannerFragment = new ScannerFragment();
+        spinFragment = new SpinWheel();
 
         initialiseNavBar();
     }
@@ -60,8 +74,14 @@ public class MainActivity extends AppCompatActivity {
             if (newTab.getId() == R.id.mHome) {
                 temp = homeFragment;
             }
+            else if (newTab.getId() == R.id.mPromos) {
+                temp = promoFragment;
+            }
             else if (newTab.getId() == R.id.mAdd) {
                 temp = scannerFragment;
+            }
+            else if (newTab.getId() == R.id.mSpinner) {
+                temp = spinFragment;
             }
             // TODO: Add other fragments here
             else {
@@ -80,5 +100,9 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
             return true;
         });
+    }
+
+    public String getUserID() {
+        return this.userID;
     }
 }

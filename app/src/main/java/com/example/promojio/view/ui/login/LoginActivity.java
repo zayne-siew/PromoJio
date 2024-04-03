@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.promojio.R;
+import com.example.promojio.view.MainActivity;
 import com.example.promojio.view.Register;
 import com.example.promojio.view.ui.login.LoginViewModel;
 import com.example.promojio.view.ui.login.LoginViewModelFactory;
@@ -34,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
+
+    public static final String USER_ID = "USER_ID";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,8 +85,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 setResult(Activity.RESULT_OK);
 
-                //Complete and destroy login activity once successful
-                finish();
+                // Switch to main activity once logged in
+                // TODO pass actual user data to MainActivity
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra(USER_ID, "fake_user_id");
+                startActivity(intent);
             }
         });
 
