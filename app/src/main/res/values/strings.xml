@@ -1,12 +1,87 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="Typos">
+
     <string name="app_name">PromoJio</string>
-    <string name="title_activity_login">LoginActivity</string>
+
+    <!-- Login activity -->
+    <string name="title_activity_login">Login Page</string>
+    <string name="title_activity_register">Register Page</string>
+
+    <string name="prompt_name">Name</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
+    <string name="prompt_new_password">Create Password</string>
+
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="action_register_in_short">Register</string>
+
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <!-- Bottom Navigation Bar -->
+    <string name="nav_home">Home</string>
+    <string name="nav_promos">My Promos</string>
+    <string name="nav_add">Add Promo Code</string>
+    <string name="nav_leaderboard">Leaderboard</string>
+    <string name="nav_spinner">Lucky Draw</string>
+
+    <!-- Home Fragment -->
+    <string name="default_name">Mohd Binte Muhammad Ali</string>
+    <string name="default_username">\@averagepromojioer</string>
+    <string name="default_xp_coins">2859 / 5000</string>
+    <string name="desc_user_profile">User Profile</string>
+    <string name="desc_close">Close</string>
+    <string name="desc_scroll">Home Page</string>
+    <string name="button_claim">CLAIM YOUR DAILY REWARD NOW!</string>
+
+    <!-- Summary Card (in Home Fragment) -->
+    <string name="default_summary_title">Summary Title</string>
+    <string name="default_summary_desc">This is a sample description, click to find out more!</string>
+    <string name="desc_arrow">Arrow</string>
+    <string name="desc_main">Summary Image</string>
+
+    <!-- Promo Code Card (in Home Fragment) -->
+    <string name="default_promo_title">20% Off on 2nd Item</string>
+    <string name="default_promo_brand">Brand Here</string>
+    <string name="default_promo_desc">This is the default promo code description.</string>
+  
+    <!-- Promo Code Fragment -->
+    <string name="shoppee">SHOPPEE</string>
+    <string name="starbucks">STARBUCKS</string>
+    <string name="available">AVAILABLE</string>
+    <string name="expiry">EXPIRY</string>
+  
+    <string-array name="food">
+        <item>MCDONALD\'s</item>
+        <item>STARBUCKS</item>
+        <item>WING STOP</item>
+        <item>Adidas</item>
+        <item>Giant</item>
+        <item >FAIRPRICE</item>
+        <item>NIKE</item>
+        <item>SINGTEL</item>
+        <item >SHOPPEE</item>
+        <item >SHENG SIONG</item>
+        <item>SCOOT</item>
+        <item >SINGAPORE AIRLINES</item>
+        <item>VIETNAM AIRLINES</item>
+    </string-array>
+    <string-array name="expiry" />
+    <string-array name="promotions" />
+
+    <!-- Scanner Fragment -->
+    <string name="title_fragment_scanner">Report Promotion</string>
+    <string name="button_import_qr">Import Code</string>
+    <string name="button_scan_qr">Scan Code</string>
+    <string name="button_submit">Submit</string>
+    <string name="prompt_manual_input">Or, fill in the form below</string>
+    <string name="prompt_company">Company / Brand Name <font color='#FF0000'>*</font></string>
+    <string name="prompt_promo">Promo Code</string>
+    <string name="prompt_category">Category <font color='#FF0000'>*</font></string>
+    <string name="prompt_expiry">Expiry</string>
+    <string name="prompt_short_desc">Short Description <font color='#FF0000'>*</font></string>
+    <string name="prompt_long_desc">Long Description <font color='#FF0000'>*</font></string>
+
 </resources>
