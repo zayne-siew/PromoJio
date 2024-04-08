@@ -39,6 +39,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
+    implementation("com.android.volley:volley:1.2.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
     implementation("nl.joery.animatedbottombar:library:1.1.0")
