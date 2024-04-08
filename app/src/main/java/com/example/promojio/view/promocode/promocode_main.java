@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.promojio.R;
-import com.example.promojio.model.promocode.promocode_model;
+import com.example.promojio.model.Promo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,18 +36,18 @@ public class promocode_main extends Fragment implements recyclerview  {
 
             RecyclerView recyclerView = view.findViewById(R.id.recyclerviewactive);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            List<promocode_model> items = new ArrayList<>();
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
-            items.add(new promocode_model(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            List<Promo> items = new ArrayList<>();
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
+            items.add(new Promo(R.drawable.mcdonald,"McDonald","now","Off","3%"));
 
             recyclerView.setAdapter(new MyAdapter(getContext(),items,this));
 
