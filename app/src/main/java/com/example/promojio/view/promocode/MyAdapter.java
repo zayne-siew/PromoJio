@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.promojio.R;
-import com.example.promojio.model.promocode.promocode_model;
+import com.example.promojio.model.Promo;
 
 import java.util.List;
 
@@ -17,10 +17,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewholderclass>{
     private final recyclerview recyclerviewinterface;
     LayoutInflater mInflater;
     Context context;
-    List<promocode_model> item;
+    List<Promo> item;
     //DataSource dataSource;
 
-    public MyAdapter( Context context, List<promocode_model>item,recyclerview recyclerviewinterface){
+    public MyAdapter(Context context, List<Promo>item, recyclerview recyclerviewinterface){
         mInflater = LayoutInflater.from( context);
         this.context=context;
         this.item = item;
@@ -39,17 +39,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewholderclass>{
 
     @Override
     public void onBindViewHolder(@NonNull MyViewholderclass holder, int position) {
-        holder.brand.setImageResource(item.get(position).getBrand());
-        holder.number.setText(item.get(position).getDiscountvalue());
-        holder.brand_name.setText(item.get(position).getBrandname());
-        holder.expirydate.setText(item.get(position).getExpirydate());
-        holder.free_off.setText(item.get(position).getDiscountdescription());
-        holder.cardview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (recyclerviewinterface != null) {
-                    recyclerviewinterface.onItemClick(item.get(position).getBrand());
-                }
+        holder.brand.setImageResource(item.get(position).getBrandLogo());
+        holder.number.setText(item.get(position).getDiscountValue());
+        holder.brand_name.setText(item.get(position).getBrandName());
+        holder.expirydate.setText(item.get(position).getExpiryDate());
+        holder.free_off.setText(item.get(position).getDiscountDescription());
+        holder.cardview.setOnClickListener(v -> {
+            if (recyclerviewinterface != null) {
+                recyclerviewinterface.onItemClick(position);
             }
         });
 
