@@ -3,8 +3,10 @@ package com.example.promojio.controller;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -13,6 +15,8 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Map;
 
 public class BaseService {
 
@@ -27,11 +31,12 @@ public class BaseService {
         this.requestQueue = Volley.newRequestQueue(context);
     }
 
-    protected JSONObject handleRequest(int method, String route) {
-        return this.handleRequest(method, route, null);
-    }
-
-    protected JSONObject handleRequest(int method, String route, @Nullable JSONObject jsonObject) {
+    protected JSONObject handleRequest(
+            int method,
+            String route,
+            @Nullable Map<String, String> authHeaders,
+            @Nullable JSONObject jsonObject
+    ) {
         this.response = null;
         JsonObjectRequest request = new JsonObjectRequest(
                 method,
@@ -50,7 +55,16 @@ public class BaseService {
                     }
                 },
                 error -> this.logError(this.getRequestType(method), route, error)
-        );
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = super.getHeaders();
+                if (authHeaders != null) {
+                    headers.putAll(authHeaders);
+                }
+                return headers;
+            }
+        };
         this.requestQueue.add(request);
 
         if (response == null) {
@@ -64,6 +78,7 @@ public class BaseService {
                 " failed with error: " + error);
     }
 
+    @NonNull
     private String getRequestType(int method) {
         switch (method) {
             case Request.Method.GET:

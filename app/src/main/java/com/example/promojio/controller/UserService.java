@@ -14,11 +14,16 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserService extends BaseService {
 
     private static UserService instance;
+
+    private User user;
     private String userID;
+    private String password;
 
     private final static String LOG_TAG = "LOGCAT_UserService";
 
@@ -32,10 +37,6 @@ public class UserService extends BaseService {
         }
         UserService.instance = new UserService(context);
         return UserService.instance;
-    }
-
-    public String getUserID() {
-        return this.userID;
     }
 
     public boolean registerUser(String name, String username, String password) {
@@ -52,6 +53,7 @@ public class UserService extends BaseService {
         JSONObject result = this.handleRequest(
                 Request.Method.POST,
                 "/user/register",
+                null,
                 userObj
         );
         if (result == null) {
@@ -83,6 +85,7 @@ public class UserService extends BaseService {
         JSONObject result = this.handleRequest(
                 Request.Method.POST,
                 "/user/login",
+                null,
                 loginObj
         );
         if (result == null) {
@@ -90,25 +93,30 @@ public class UserService extends BaseService {
         }
         try {
             JSONObject user = result.getJSONObject("user");
-            if (this.userID == null) {
-                this.userID = user.getString("id");
+            if (this.user == null) {
+                this.password = user.getString("password");
+                this.user = new User(user);
             }
             return true;
         }
         catch (JSONException e) {
             Log.e(LOG_TAG, "Unable to obtain user ID due to error: " + e);
+            this.password = null;
+            this.user = null;
             return false;
         }
     }
 
     public User getUserByID() {
-        if (this.undefinedUserID()) {
+        if (this.undefinedUserID() || this.undefinedUser()) {
             return null;
         }
 
         JSONObject result = this.handleRequest(
                 Request.Method.GET,
-                "/user/" + this.userID
+                "/user/" + this.userID,
+                this.getAuthHeaders(),
+                null
         );
         if (result == null) {
             return null;
@@ -124,7 +132,7 @@ public class UserService extends BaseService {
     }
 
     public boolean updateUserPoints(int points) {
-        if (this.undefinedUserID()) {
+        if (this.undefinedUserID() || this.undefinedUser()) {
             return false;
         }
 
@@ -139,6 +147,7 @@ public class UserService extends BaseService {
         JSONObject result = this.handleRequest(
                 Request.Method.PATCH,
                 "/user/" + this.userID + "/update/points",
+                this.getAuthHeaders(),
                 updateObj
         );
         if (result == null) {
@@ -154,7 +163,7 @@ public class UserService extends BaseService {
     }
 
     public boolean updateUserTierPoints(int tierPoints) {
-        if (this.undefinedUserID()) {
+        if (this.undefinedUserID() || this.undefinedUser()) {
             return false;
         }
 
@@ -169,6 +178,7 @@ public class UserService extends BaseService {
         JSONObject result = this.handleRequest(
                 Request.Method.PATCH,
                 "/user/" + this.userID + "/update/tierpoints",
+                this.getAuthHeaders(),
                 updateObj
         );
         if (result == null) {
@@ -184,7 +194,7 @@ public class UserService extends BaseService {
     }
 
     public boolean addPromoToUser(String promoID) {
-        if (this.undefinedUserID()) {
+        if (this.undefinedUserID() || this.undefinedUser()) {
             return false;
         }
 
@@ -199,6 +209,7 @@ public class UserService extends BaseService {
         JSONObject result = this.handleRequest(
                 Request.Method.POST,
                 "/user/" + this.userID + "/add/promo",
+                this.getAuthHeaders(),
                 promoObj
         );
         if (result == null) {
@@ -215,9 +226,26 @@ public class UserService extends BaseService {
 
     private boolean undefinedUserID() {
         if (this.userID == null) {
-            Log.e(LOG_TAG, "User ID undefined");
+            Log.w(LOG_TAG, "User ID undefined");
         }
         return this.userID == null;
+    }
+
+    private boolean undefinedUser() {
+        if (this.user == null || this.password == null) {
+            Log.w(LOG_TAG, "User undefined");
+        }
+        return this.user == null || this.password == null;
+    }
+
+    @NonNull
+    private Map<String, String> getAuthHeaders() {
+        Map<String, String> authHeaders = new HashMap<>();
+        if (!this.undefinedUser()) {
+            authHeaders.put("username", this.user.getUsername());
+            authHeaders.put("password", this.password);
+        }
+        return authHeaders;
     }
 
     @NonNull

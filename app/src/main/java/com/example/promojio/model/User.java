@@ -9,12 +9,10 @@ import org.json.JSONObject;
 
 public class User implements Comparable<User> {
 
-    private String id;
+    private String id; // For hashing only, not to be used directly
     private String name;
     private String username;
-
     // private Binary profileImage;
-
     private int points;
     private int tierPoints;
     private String memberTier;
