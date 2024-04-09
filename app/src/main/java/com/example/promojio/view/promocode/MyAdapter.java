@@ -39,17 +39,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewholderclass>{
 
     @Override
     public void onBindViewHolder(@NonNull MyViewholderclass holder, int position) {
-        holder.brand.setImageResource(item.get(position).getBrand());
+        holder.brand.setImageResource(item.get(position).getBrandLogo());
         holder.number.setText(item.get(position).getDiscountValue());
         holder.brand_name.setText(item.get(position).getBrandName());
         holder.expirydate.setText(item.get(position).getExpiryDate());
         holder.free_off.setText(item.get(position).getDiscountDescription());
-        holder.cardview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (recyclerviewinterface != null) {
-                    recyclerviewinterface.onItemClick(item.get(position).getBrand());
-                }
+        holder.cardview.setOnClickListener(v -> {
+            if (recyclerviewinterface != null) {
+                recyclerviewinterface.onItemClick(position);
             }
         });
 
