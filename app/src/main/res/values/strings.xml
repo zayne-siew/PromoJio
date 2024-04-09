@@ -48,6 +48,8 @@
     <string name="default_promo_desc">This is the default promo code description.</string>
   
     <!-- Promo Code Fragment -->
+    <string name="promo_main_title">My Promo Codes</string>
+    <string name="promo_view_title">View Promo Code</string>
     <string name="shoppee">SHOPPEE</string>
     <string name="starbucks">STARBUCKS</string>
     <string name="available">AVAILABLE</string>

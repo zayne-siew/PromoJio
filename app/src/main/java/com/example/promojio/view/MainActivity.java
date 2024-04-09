@@ -1,5 +1,6 @@
 package com.example.promojio.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -11,32 +12,43 @@ import android.widget.Toast;
 import nl.joery.animatedbottombar.AnimatedBottomBar;
 
 import com.example.promojio.R;
+import com.example.promojio.controller.UserService;
 import com.example.promojio.view.home.HomeFragment;
+import com.example.promojio.view.promocode.SubActivitypromocode;
 import com.example.promojio.view.promocode.promocode_main;
 import com.example.promojio.view.scanner.ScannerFragment;
 import com.example.promojio.view.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AnimatedBottomBar bottomNavigationView;
+    private static AnimatedBottomBar bottomNavigationView;
 
     private HomeFragment homeFragment;
     private promocode_main promoFragment;
+    private SubActivitypromocode viewPromoFragment;
     private ScannerFragment scannerFragment;
     private SpinWheel spinFragment;
 
     private final static String LOG_TAG = "LOGCAT_MainActivity";
-    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Retrieve the Intent from the login activity
-        Intent loginIntent = getIntent();
-        this.userID = loginIntent.getStringExtra(LoginActivity.USER_ID);
-        // TODO query database with user ID
+        // Ensure that there is a defined user service
+        /*if (UserService.newInstance(getApplicationContext()).undefinedUserID()) {
+            // Something went wrong; go back to login page
+            Log.e(LOG_TAG, "Expecting user ID to be set; returning to login page...");
+            Toast.makeText(
+                    getApplicationContext(),
+                    "Something went wrong, returning to login...",
+                    Toast.LENGTH_LONG
+            ).show();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            return;
+        }*/
 
         // Initialise fragments in main activity
         homeFragment = new HomeFragment();
@@ -45,6 +57,26 @@ public class MainActivity extends AppCompatActivity {
         spinFragment = new SpinWheel();
 
         initialiseNavBar();
+    }
+
+    public void selectPage(int tabId) {
+        bottomNavigationView.selectTabById(tabId, true);
+    }
+
+    public void showViewPromo(@NonNull SubActivitypromocode viewPromoFragment) {
+        this.viewPromoFragment = viewPromoFragment;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.layoutFrame, viewPromoFragment)
+                .commit();
+    }
+
+    public void hideViewPromo() {
+        viewPromoFragment = null;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.layoutFrame, promoFragment)
+                .commit();
     }
 
     private void initialiseNavBar() {
@@ -75,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 temp = homeFragment;
             }
             else if (newTab.getId() == R.id.mPromos) {
-                temp = promoFragment;
+                temp = viewPromoFragment == null ? promoFragment : viewPromoFragment;
             }
             else if (newTab.getId() == R.id.mAdd) {
                 temp = scannerFragment;
@@ -100,9 +132,5 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
             return true;
         });
-    }
-
-    public String getUserID() {
-        return this.userID;
     }
 }
