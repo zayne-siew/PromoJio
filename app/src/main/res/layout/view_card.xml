@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/imageViewCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/desc_main"
             android:scaleType="centerInside"

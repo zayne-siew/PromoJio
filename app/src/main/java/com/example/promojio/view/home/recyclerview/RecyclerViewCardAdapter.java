@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.promojio.R;
 import com.example.promojio.model.Promo;
-import com.example.promojio.view.promocode.recyclerview;
+import com.example.promojio.view.promocode.recyclerview.recyclerview;
 
 public class RecyclerViewCardAdapter
         extends RecyclerView.Adapter<RecyclerViewCardAdapter.ViewHolder> {

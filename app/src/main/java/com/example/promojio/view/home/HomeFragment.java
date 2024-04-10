@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,11 @@ import com.example.promojio.view.home.viewpager2.ZoomOutPageTransformer;
 import com.example.promojio.view.promocode.SubActivitypromocode;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashSet;
-import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -69,6 +73,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Handle ViewPager2 for front-page summaries
+        // TODO populate summary fragments
         ViewPager2 viewPagerSummary = (ViewPager2) view.findViewById(R.id.viewPagerSummary);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity());
         viewPagerSummary.setAdapter(adapter);
@@ -91,50 +96,77 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        // Query database for user and promo code information
-        User user = UserService.newInstance(getContext()).getUserByID();
-        List<Promo> allPromos = PromoService.newInstance(getContext()).getAllPromos();
+        // Query database for user information
+        UserService.newInstance().getUserByID(
+                getContext(),
+                response -> {
+                    try {
+                        JSONObject userObject = response.getJSONObject("user");
+                        User user = new User(userObject);
 
-        // Display progress bar animations
-        linearProgressXP.setMax(MemberTier.tierMaxPoints(user.getMemberTier()));
-        this.updateProgress(linearProgressXP, textViewXP, user.getTierPoints());
-        this.updateProgress(linearProgressCoins, textViewCoins, user.getPoints());
+                        // Display progress bar animations
+                        linearProgressXP.setMax(MemberTier.tierMaxPoints(user.getMemberTier()));
+                        this.updateProgress(linearProgressXP, textViewXP, user.getTierPoints());
+                        this.updateProgress(linearProgressCoins, textViewCoins, user.getPoints());
+                    }
+                    catch (JSONException e) {
+                        Log.e(LOG_TAG, "Unable to obtain User due to error: " + e);
+                    }
+                }
+        );
 
-        // Handle RecyclerView for pseudo-random mini recommendations
-        // Obtain random number of rows
-        int rows = (int) (Math.random() * 4) + 3;
-        HashSet<String> titleSet = new HashSet<>();
-        while (titleSet.size() < rows) {
-            titleSet.add(this.titles[(int) (Math.random() * this.titles.length)]);
-        }
-        String[] selectedTitles = new String[rows];
-        int j = 0;
-        for (String title: titleSet) {
-            selectedTitles[j++] = title;
-        }
-        RecyclerViewCardAdapter[] adapters = new RecyclerViewCardAdapter[rows];
-        for (int i = 0; i < rows; i++) {
-            // Obtain random number of cards
-            int cards = (int) (Math.random() * 5) + 10;
-            HashSet<Promo> promos = new HashSet<>();
-            while (promos.size() < cards) {
-                promos.add(allPromos.get((int) (Math.random() * allPromos.size())));
-            }
-            // Set adapter for the current row
-            Promo[] selectedPromos = new Promo[cards];
-            j = 0;
-            for (Promo promo: promos) {
-                selectedPromos[j++] = promo;
-            }
-            adapters[i] = new RecyclerViewCardAdapter(selectedPromos, promo -> {
-                ((MainActivity) requireActivity()).showViewPromo(new SubActivitypromocode(promo));
-            });
-        }
-        recyclerViewCards.setAdapter(new RecyclerViewAdapter(
-                selectedTitles,
-                adapters,
-                () -> ((MainActivity) requireActivity()).selectPage(R.id.mPromos)
-        ));
+        // Query database for promo code information
+        PromoService.getAllPromos(
+                getContext(),
+                response -> {
+                    try {
+                        JSONArray promoArray = response.getJSONArray("promos");
+                        MainActivity mainActivity = (MainActivity) requireActivity();
+
+                        // Handle RecyclerView for pseudo-random mini recommendations
+                        // Obtain random number of rows
+                        int rows = (int) (Math.random() * 4) + 3;
+                        HashSet<String> titleSet = new HashSet<>();
+                        while (titleSet.size() < rows) {
+                            titleSet.add(this.titles[(int) (Math.random() * this.titles.length)]);
+                        }
+                        String[] selectedTitles = new String[rows];
+                        int j = 0;
+                        for (String title: titleSet) {
+                            selectedTitles[j++] = title;
+                        }
+                        RecyclerViewCardAdapter[] adapters = new RecyclerViewCardAdapter[rows];
+                        for (int i = 0; i < rows; i++) {
+                            // Obtain random number of cards
+                            int cards = (int) (Math.random() * 5) + 10;
+                            HashSet<Promo> promos = new HashSet<>();
+                            while (promos.size() < cards) {
+                                promos.add(new Promo((JSONObject) promoArray.get(
+                                        (int) (Math.random() * promoArray.length())
+                                )));
+                            }
+                            // Set adapter for the current row
+                            Promo[] selectedPromos = new Promo[cards];
+                            j = 0;
+                            for (Promo promo: promos) {
+                                selectedPromos[j++] = promo;
+                            }
+                            adapters[i] = new RecyclerViewCardAdapter(selectedPromos, promo -> {
+                                mainActivity.selectPage(R.id.mPromos);
+                                mainActivity.showViewPromo(new SubActivitypromocode(promo));
+                            });
+                        }
+                        recyclerViewCards.setAdapter(new RecyclerViewAdapter(
+                                selectedTitles,
+                                adapters,
+                                () -> mainActivity.selectPage(R.id.mPromos)
+                        ));
+                    }
+                    catch (JSONException e) {
+                        Log.e(LOG_TAG, "Unable to obtain promos due to error: " + e);
+                    }
+                }
+        );
     }
 
     @Override

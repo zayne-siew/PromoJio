@@ -17,7 +17,7 @@ import com.example.promojio.view.home.HomeFragment;
 import com.example.promojio.view.promocode.SubActivitypromocode;
 import com.example.promojio.view.promocode.promocode_main;
 import com.example.promojio.view.scanner.ScannerFragment;
-import com.example.promojio.view.ui.login.LoginActivity;
+import com.example.promojio.view.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Ensure that there is a defined user service
-        /*if (UserService.newInstance(getApplicationContext()).undefinedUserID()) {
+        if (UserService.newInstance().unauthenticatedUser()) {
             // Something went wrong; go back to login page
             Log.e(LOG_TAG, "Expecting user ID to be set; returning to login page...");
             Toast.makeText(
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return;
-        }*/
+        }
 
         // Initialise fragments in main activity
         homeFragment = new HomeFragment();
