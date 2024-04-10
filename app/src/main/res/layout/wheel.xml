@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,26 +13,28 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:elevation="4dp"
+        android:fontFamily="@font/manrope_bold"
         android:gravity="center"
         android:padding="16dp"
-        android:text="Lucky Spin!"
+        android:text="@string/title_fragment_spinner"
         android:textColor="#7A3FE3"
-        android:textSize="50dp" />
-
+        android:textSize="50sp" />
 
     <ImageView
         android:id="@+id/outerRingImageView"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/border" />
+        android:src="@drawable/border"
+        android:contentDescription="@string/content_outer_wheel" />
 
     <ImageView
         android:id="@+id/wheelImageView"
         android:layout_width="270dp"
         android:layout_height="270dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/wheel" />
+        android:src="@drawable/wheel"
+        android:contentDescription="@string/content_inner_wheel" />
 
     <ImageView
         android:id="@+id/pointerImageView"
@@ -39,14 +42,16 @@
         android:layout_height="40dp"
         android:layout_alignTop="@id/outerRingImageView"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/pointer" />
+        android:src="@drawable/pointer"
+        android:contentDescription="@string/content_pointer" />
 
     <Button
         android:id="@+id/spinButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/outerRingImageView"
-        android:text="Spin" />
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/manrope_medium"
+        android:text="@string/prompt_spin" />
 
 </RelativeLayout>
