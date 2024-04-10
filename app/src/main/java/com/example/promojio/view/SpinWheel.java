@@ -18,18 +18,31 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.promojio.R;
+import com.example.promojio.controller.PromoService;
+import com.example.promojio.controller.UserService;
+
+import org.json.JSONException;
 
 import java.util.Random;
 
 public class SpinWheel extends Fragment {
 
     private ImageView wheelImageView;
-    private Random random = new Random();
-    private long lastSpinDuration = 0;
-    private int lastAngle = 0;
 
-    // Empty default constructor
+    private final Random random;
+    private int lastAngle;
+
+    private final static int COINS = 50;
+    private final static String REWARD_TRY_AGAIN = "Please try again";
+    private final static String REWARD_MYSTERY_GIFT = "You won a mystery gift!";
+    private final static String REWARD_COINS = "You won " + COINS + " coins!";
+    private final static String REWARD_PROMO_CODE = "You won a free promo code!";
+
+    private final static String LOG_TAG = "LOGCAT_SpinWheel";
+
     public SpinWheel() {
+        this.random = new Random();
+        this.lastAngle = 0;
     }
 
     @Nullable
@@ -52,11 +65,16 @@ public class SpinWheel extends Fragment {
     private void spinWheel() {
         int angle = 360*12 + (random.nextInt(360) + 1); // Ensures at least 4 rotations, plus a random amount.
 
-        Log.d("SpinWheel", "angle: " + angle);
+        Log.d(LOG_TAG, "angle: " + angle);
 
-        lastSpinDuration = 3000 + random.nextInt(2000); // Duration between 3 and 5 seconds
+        long lastSpinDuration = 3000 + random.nextInt(2000); // Duration between 3 and 5 seconds
 
-        ObjectAnimator animator = ObjectAnimator.ofFloat(wheelImageView, "rotation", lastAngle, angle + lastAngle);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(
+                wheelImageView,
+                "rotation",
+                lastAngle,
+                angle + lastAngle
+        );
         animator.setDuration(lastSpinDuration);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.addListener(new AnimatorListenerAdapter() {
@@ -78,29 +96,69 @@ public class SpinWheel extends Fragment {
         // Determine the prize based on the normalized angle.
         String prize;
         if ((lastAngle >= 343) || (lastAngle < 19)) {
-            prize = "You won a mystery gift!";
+            prize = REWARD_MYSTERY_GIFT;
         } else if (lastAngle < 55) {
-            prize = "You won a free promocode!";
+            prize = REWARD_PROMO_CODE;
         } else if (lastAngle < 91) {
-            prize = "Please try again";
+            prize = REWARD_TRY_AGAIN;
         } else if (lastAngle < 127) {
-            prize = "You won 50 coins!";
+            prize = REWARD_COINS;
         } else if (lastAngle < 163) {
-            prize = "You won a mystery gift!";
+            prize = REWARD_MYSTERY_GIFT;
         } else if (lastAngle < 199) {
-            prize = "Please try again";
+            prize = REWARD_TRY_AGAIN;
         } else if (lastAngle < 235) {
-            prize = "You won a free promocode!";
+            prize = REWARD_PROMO_CODE;
         } else if (lastAngle < 271) {
-            prize = "You won a mystery gift!";
+            prize = REWARD_MYSTERY_GIFT;
         } else if (lastAngle < 307) {
-            prize = "Please try again";
+            prize = REWARD_TRY_AGAIN;
         } else { // normalizedAngle < 343
-            prize = "You won 50 coins!";
+            prize = REWARD_COINS;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        if (prize.equals("Please try again")) {
+        // Perform backend updates
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        switch (prize) {
+            case REWARD_COINS:
+                UserService.newInstance().updateUserPoints(
+                        getContext(),
+                        response -> {},
+                        COINS
+                );
+                mainActivity.notifyTab(R.id.mHome);
+                break;
+            case REWARD_PROMO_CODE:
+                PromoService.getRandomPromo(
+                        getContext(),
+                        response -> {
+                            try {
+                                UserService.newInstance().addPromoToUser(
+                                        getContext(),
+                                        response1 -> {},
+                                        response.getJSONObject("promo").getString("id")
+                                );
+                            }
+                            catch (JSONException e) {
+                                Log.e(LOG_TAG, "Unable to obtain promo from response: " + e);
+                            }
+                        }
+                );
+                mainActivity.notifyTab(R.id.mPromos);
+                break;
+            case REWARD_MYSTERY_GIFT:
+                UserService.newInstance().updateUserTierPoints(
+                        getContext(),
+                        response -> {},
+                        Math.abs(this.random.nextInt() % 1000)
+                );
+                mainActivity.notifyTab(R.id.mHome);
+                break;
+        }
+
+        // Notify user via AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        if (prize.equals(REWARD_TRY_AGAIN)) {
             builder.setTitle("Sorry :(");
         }
         else {
@@ -110,8 +168,5 @@ public class SpinWheel extends Fragment {
         builder.setPositiveButton("OK", null);
         AlertDialog dialog = builder.create();
         dialog.show();
-
     }
-
-
 }
