@@ -88,15 +88,11 @@ public class SubActivitypromocode extends Fragment {
         userService.updateUserPoints(
                 getContext(),
                 response -> {},
-                -this.promo.getPoints()
+                this.promo.getPoints()
         );
         userService.addPromoToUser(
                 getContext(),
-                response -> Toast.makeText(
-                        getContext(),
-                        "Purchasing promo code...",
-                        Toast.LENGTH_SHORT
-                ).show(),
+                response -> {},
                 this.promo.getId()
         );
 
@@ -109,16 +105,15 @@ public class SubActivitypromocode extends Fragment {
         // Perform backend update
         UserService.newInstance().usePromo(
                 getContext(),
-                response -> Toast.makeText(
-                        getContext(),
-                        "Applying promo code...",
-                        Toast.LENGTH_SHORT
-                ).show(),
+                response -> {},
                 this.promo.getId()
         );
 
         // Navigate away from promo code
-        ((MainActivity) requireActivity()).hideViewPromo();
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.hideViewPromo();
+        mainActivity.notifyTab(R.id.mHome);
+
         String url = this.promo.getBrandURL();
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
             url = "https://" + url;
