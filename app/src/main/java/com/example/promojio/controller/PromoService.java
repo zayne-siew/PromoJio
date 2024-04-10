@@ -6,8 +6,12 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.example.promojio.model.Promo;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PromoService extends BaseService {
 
@@ -72,6 +76,57 @@ public class PromoService extends BaseService {
         JSONObject result = this.handleRequest(
                 Request.Method.GET,
                 "/promo/" + promoID,
+                null,
+                null
+        );
+        if (result == null) {
+            return null;
+        }
+        try {
+            return new Promo(result.getJSONObject("promo"));
+        }
+        catch (JSONException e) {
+            Log.e(LOG_TAG, "Unable to obtain promo ID due to error: " + e);
+            return null;
+        }
+    }
+
+    public List<Promo> getAllPromos() {
+        List<Promo> allPromos = new ArrayList<>();
+        JSONObject result = this.handleRequest(
+                Request.Method.GET,
+                "/promo",
+                null,
+                null
+        );
+        if (result == null) {
+            return allPromos;
+        }
+        try {
+            JSONArray promoArray = result.getJSONArray("promos");
+            for (int i = 0; i < promoArray.length(); i++) {
+                allPromos.add(new Promo((JSONObject) promoArray.get(i)));
+            }
+        }
+        catch (JSONException e) {
+            Log.e(LOG_TAG, "Unable to obtain promos due to error: " + e);
+        }
+
+        return allPromos;
+    }
+
+    public Promo getRandomPromo() {
+        return this.getRandomPromo(0, Integer.MAX_VALUE);
+    }
+
+    public Promo getRandomPromo(int min) {
+        return this.getRandomPromo(min, Integer.MAX_VALUE);
+    }
+
+    public Promo getRandomPromo(int min, int max) {
+        JSONObject result = this.handleRequest(
+                Request.Method.GET,
+                "/promo/random?min=" + min + "?max=" + max,
                 null,
                 null
         );
