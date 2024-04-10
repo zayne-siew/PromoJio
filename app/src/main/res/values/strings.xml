@@ -48,6 +48,8 @@
     <string name="default_promo_desc">This is the default promo code description.</string>
   
     <!-- Promo Code Fragment -->
+    <string name="promo_main_title">My Promo Codes</string>
+    <string name="promo_view_title">View Promo Code</string>
     <string name="shoppee">SHOPPEE</string>
     <string name="starbucks">STARBUCKS</string>
     <string name="available">AVAILABLE</string>
@@ -83,5 +85,12 @@
     <string name="prompt_expiry">Expiry</string>
     <string name="prompt_short_desc">Short Description <font color='#FF0000'>*</font></string>
     <string name="prompt_long_desc">Long Description <font color='#FF0000'>*</font></string>
+
+    <!-- Spinner Wheel -->
+    <string name="title_fragment_spinner">Lucky Spin!</string>
+    <string name="content_outer_wheel">Outer Wheel</string>
+    <string name="content_inner_wheel">Inner Wheel</string>
+    <string name="content_pointer">Pointer</string>
+    <string name="prompt_spin">Spin</string>
 
 </resources>
