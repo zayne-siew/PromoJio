@@ -25,7 +25,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.promojio.R;
-import com.example.promojio.controller.PromoService;
 import com.example.promojio.controller.UserService;
 import com.example.promojio.model.BrandRenderer;
 import com.example.promojio.model.Promo;
@@ -310,7 +309,7 @@ public class ScannerFragment extends Fragment {
         }
     }
 
-    private boolean decodeQR(Barcode barcode) {
+    private boolean decodeQR(@NonNull Barcode barcode) {
         // Obtain raw value from QR code
         String strPromo = barcode.getRawValue();
         Log.d(LOG_TAG, "QR Information: " + strPromo);
@@ -387,7 +386,7 @@ public class ScannerFragment extends Fragment {
         buttonSubmit.setOnClickListener(v -> {
             // Retrieve all fields
             String company = editTextCompany.getEditableText().toString(),
-                    promo = editTextPromo.getEditableText().toString(),
+                    // promo = editTextPromo.getEditableText().toString(),
                     category = dropdownCategory.getEditableText().toString(),
                     strExpiry = datePicker.getEditableText().toString(),
                     shortDesc = editTextShortDesc.getEditableText().toString(),
@@ -467,31 +466,26 @@ public class ScannerFragment extends Fragment {
             }
 
             // Submit promo code to database for verification and rewarding
-            // TODO add category
-            int points = (int) Math.floor(Math.random() * 1000);
-            String promoID = PromoService.newInstance(requireContext()).createPromo(
+            UserService.newInstance().userCreatesPromo(
+                    getContext(),
+                    response -> {
+                        // Notify user of successful addition to promo code
+                        Toast.makeText(
+                                getContext(),
+                                "Promo code registration successful!",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        ((MainActivity) requireActivity()).notifyTab(R.id.mPromos);
+                    },
                     company,
                     smallLabel,
                     bigLabel,
+                    category,
                     shortDesc,
                     longDesc,
-                    expiry == null ? "No expiry" : Promo.formatDate(expiry),
-                    points
+                    expiry == null ? "" : Promo.formatDate(expiry),
+                    (int) (Math.random() * 1000)
             );
-            UserService userService = UserService.newInstance(requireContext());
-            if (userService.addPromoToUser(promoID)) {
-                // Update user points and tier points with value of promo code
-                userService.updateUserPoints(points);
-                userService.updateUserTierPoints(points);
-
-                // Notify user of successful addition to promo code
-                Toast.makeText(
-                        getContext(),
-                        "Promo code registration successful!",
-                        Toast.LENGTH_SHORT
-                ).show();
-                ((MainActivity) requireActivity()).notifyTab(R.id.mPromos);
-            }
 
             // Clear user input
             this.clearForm();

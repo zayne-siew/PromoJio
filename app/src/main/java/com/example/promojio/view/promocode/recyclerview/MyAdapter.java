@@ -72,7 +72,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewholderclass>
             this.brand.setImageResource(promo.getBrandLogo());
             this.number.setText(promo.getDiscountValue());
             this.brand_name.setText(promo.getBrandName());
-            this.expirydate.setText(promo.getExpiryDate());
+            String expiry = promo.getExpiryDate();
+            this.expirydate.setText(
+                    expiry.isEmpty() ? "This promo code does not expire" : "Expires " + expiry
+            );
             this.free_off.setText(promo.getDiscountDescription());
             this.cardview.setOnClickListener(v -> listener.onItemClick(promo));
         }
