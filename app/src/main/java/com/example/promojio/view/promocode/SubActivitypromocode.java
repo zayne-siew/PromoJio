@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -82,6 +83,7 @@ public class SubActivitypromocode extends Fragment {
 
     private void buyPromo() {
         // Perform backend update
+        // TODO check if user has enough points
         UserService userService = UserService.newInstance();
         userService.updateUserPoints(
                 getContext(),
@@ -90,7 +92,11 @@ public class SubActivitypromocode extends Fragment {
         );
         userService.addPromoToUser(
                 getContext(),
-                response -> {},
+                response -> Toast.makeText(
+                        getContext(),
+                        "Purchasing promo code...",
+                        Toast.LENGTH_SHORT
+                ).show(),
                 this.promo.getId()
         );
 
@@ -103,7 +109,11 @@ public class SubActivitypromocode extends Fragment {
         // Perform backend update
         UserService.newInstance().usePromo(
                 getContext(),
-                response -> {},
+                response -> Toast.makeText(
+                        getContext(),
+                        "Applying promo code...",
+                        Toast.LENGTH_SHORT
+                ).show(),
                 this.promo.getId()
         );
 

@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
         linearProgressXP = (LinearProgressIndicator) view.findViewById(R.id.linearProgressXP);
         textViewCoins = (TextView) view.findViewById(R.id.textViewCoins);
         linearProgressCoins = (LinearProgressIndicator) view.findViewById(R.id.linearProgressCoins);
-        linearProgressCoins.setMax(10000);
+        linearProgressCoins.setMax(2000);
     }
 
     @Override
