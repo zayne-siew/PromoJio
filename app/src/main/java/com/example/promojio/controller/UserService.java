@@ -6,15 +6,19 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.android.volley.Request;
+import com.example.promojio.model.Promo;
 import com.example.promojio.model.User;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserService extends BaseService {
@@ -222,6 +226,34 @@ public class UserService extends BaseService {
             Log.e(LOG_TAG, "Unable to obtain updated status due to error: " + e);
             return false;
         }
+    }
+
+    public List<Promo> getUserPromos() {
+        List<Promo> userPromos = new ArrayList<>();
+        if (this.undefinedUserID() || this.undefinedUser()) {
+            return userPromos;
+        }
+
+        JSONObject result = this.handleRequest(
+                Request.Method.GET,
+                "/user/" + this.userID,
+                this.getAuthHeaders(),
+                null
+        );
+        if (result == null) {
+            return userPromos;
+        }
+        try {
+            JSONArray promoArray = result.getJSONObject("user").getJSONArray("promos");
+            for (int i = 0; i < promoArray.length(); i++) {
+                userPromos.add(new Promo((JSONObject) promoArray.get(i)));
+            }
+        }
+        catch (JSONException e) {
+            Log.e(LOG_TAG, "Unable to obtain promos due to error: " + e);
+        }
+
+        return userPromos;
     }
 
     private boolean undefinedUserID() {
