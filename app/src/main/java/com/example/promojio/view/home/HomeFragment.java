@@ -153,7 +153,9 @@ public class HomeFragment extends Fragment {
                             }
                             adapters[i] = new RecyclerViewCardAdapter(selectedPromos, promo -> {
                                 mainActivity.selectPage(R.id.mPromos);
-                                mainActivity.showViewPromo(new SubActivitypromocode(promo));
+                                mainActivity.showViewPromo(
+                                        new SubActivitypromocode(promo, false)
+                                );
                             });
                         }
                         recyclerViewCards.setAdapter(new RecyclerViewAdapter(

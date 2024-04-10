@@ -15,19 +15,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.promojio.R;
-import com.example.promojio.model.BrandRenderer;
+import com.example.promojio.controller.UserService;
 import com.example.promojio.model.Promo;
 import com.example.promojio.view.MainActivity;
 import com.example.promojio.view.promocode.recyclerview.MyAdapter;
-import com.example.promojio.view.promocode.recyclerview.recyclerview;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class promocode_main extends Fragment implements recyclerview {
+public class promocode_main extends Fragment {
+
+    private RecyclerView recyclerView;
 
     private final static String LOG_TAG = "LOGCAT_promocode_main";
 
@@ -57,45 +59,38 @@ public class promocode_main extends Fragment implements recyclerview {
         ImageView leftIcon = (ImageView) view.findViewById(R.id.lefticon);
         leftIcon.setVisibility(View.INVISIBLE);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerviewactive);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerviewactive);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        List<Promo> items = new ArrayList<>();
-        // TODO testing only; load promo codes from database
-        for (int i = 1; i <= 10; i++) {
-            JSONObject promoObject = new JSONObject();
-
-            try {
-                promoObject.put("id", "some testing ID " + i);
-                promoObject.put("brand", BrandRenderer.BRAND_MCDONALDS);
-                promoObject.put("smallLabel", "Off");
-                promoObject.put("bigLabel", i + "%");
-                promoObject.put(
-                        "shortDescription",
-                        i + "% off all items on the menu"
-                );
-                promoObject.put(
-                        "longDescription",
-                        "this is a test long description for number " + i + ". " +
-                                "blah blah blah blah blah blah blah. " +
-                                "kngewikvewo ewovwovew oewnv i wifnewcnen we ewc."
-                );
-                promoObject.put("validity", "2025-02-04");
-                promoObject.put("points", i * 100);
-            }
-            catch (JSONException e) {
-                Log.e(LOG_TAG, "Unable to build promo JSONObject: " + e);
-                return;
-            }
-
-            items.add(new Promo(promoObject));
-        }
-        recyclerView.setAdapter(new MyAdapter(items, this));
     }
 
     @Override
-    public void onItemClick(Promo promo) {
-        // what happens when the item is click
-        ((MainActivity) requireActivity()).showViewPromo(new SubActivitypromocode(promo));
+    public void onResume() {
+        super.onResume();
+
+        // Populate promo codes from database
+        UserService.newInstance().getUserPromos(
+                getContext(),
+                response -> {
+                    try {
+                        List<Promo> items = new ArrayList<>();
+                        JSONArray promoArray = response.getJSONObject("user")
+                                                        .getJSONArray("promos");
+                        for (int i = 0; i < promoArray.length(); i++) {
+                            items.add(new Promo((JSONObject) promoArray.get(i)));
+                        }
+
+                        recyclerView.setAdapter(new MyAdapter(
+                                items,
+                                promo -> ((MainActivity) requireActivity())
+                                        .showViewPromo(new SubActivitypromocode(promo, true))
+                        ));
+                    }
+                    catch (JSONException e) {
+                        Log.e(LOG_TAG, "Unable to obtain promos due to error: " + e);
+                    }
+                }
+        );
+
+        // TODO perform filtering by buttons
     }
 }

@@ -61,11 +61,29 @@
     <!-- Promo Code Fragment -->
     <string name="promo_main_title">My Promo Codes</string>
     <string name="promo_view_title">View Promo Code</string>
-    <string name="shoppee">SHOPPEE</string>
-    <string name="starbucks">STARBUCKS</string>
+    <string name="filter_all">ALL</string>
+    <string name="filter_food">FOOD</string>
+    <string name="filter_other">OTHER</string>
+    <string name="filter_shop">SHOP</string>
+    <string name="filter_travel">TRAVEL</string>
     <string name="available">AVAILABLE</string>
-    <string name="expiry">EXPIRY</string>
-  
+    <string name="expiry">EXPIRING</string>
+
+    <string name="promo_brand_logo">Brand Logo</string>
+    <string name="promo_expiry">Expires DD-MM-YYYY</string>
+    <string name="promo_big_label">1-for-1</string>
+    <string name="promo_small_label">off selected items with every purchase</string>
+    <string name="promo_brand">SHOPEE</string>
+    <string name="promo_short_desc">Purchase Any Starbucks Beverage AND Receive A Complimentary Second Beverage</string>
+    <string name="promo_long_desc">- Redeemable at all Starbucks Coffee store in Singapore\n
+        - Not valid with any other discounts and promotions\n
+        - Valid for coffee and tea beverages only.\n
+        - No cash value.</string>
+    <string name="promo_barcode">Barcode</string>
+    <string name="btn_use_promo">USE</string>
+    <string name="btn_buy_promo">BUY</string>
+
+    <string name="starbucks">STARBUCKS</string>
     <string-array name="food">
         <item>MCDONALD\'s</item>
         <item>STARBUCKS</item>

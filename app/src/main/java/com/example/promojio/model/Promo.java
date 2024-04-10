@@ -73,6 +73,10 @@ public class Promo implements Comparable<Promo> {
         return d1 == null || d2 == null ? 0 : d1.compareTo(d2);
     }
 
+    public String getId() {
+        return this.id;
+    }
+
     public String getExpiryDate() {
         return this.expiryDate;
     }

@@ -15,15 +15,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.promojio.R;
+import com.example.promojio.controller.UserService;
 import com.example.promojio.model.Promo;
 import com.example.promojio.view.MainActivity;
 
 public class SubActivitypromocode extends Fragment {
 
-    private final Promo promo;
+    private Button button;
 
-    public SubActivitypromocode(Promo promo) {
+    private final Promo promo;
+    private boolean owned;
+
+    public SubActivitypromocode(Promo promo, boolean owned) {
         this.promo = promo;
+        this.owned = owned;
     }
 
     @Override
@@ -47,7 +52,7 @@ public class SubActivitypromocode extends Fragment {
         TextView textViewMainText = (TextView) view.findViewById(R.id.Maintext);
         TextView textViewBodyText = (TextView) view.findViewById(R.id.Bodytext);
         TextView textViewToolbar = (TextView) view.findViewById(R.id.toolbartitle);
-        Button button = (Button) view.findViewById(R.id.button);
+        this.button = (Button) view.findViewById(R.id.button);
         ImageView leftIcon = (ImageView) view.findViewById(R.id.lefticon);
 
         imageViewBrandLogo.setImageResource(this.promo.getBrandLogo());
@@ -60,17 +65,55 @@ public class SubActivitypromocode extends Fragment {
 
         // function to go to the website when press the button
         // on the promocode info page to get order
-        button.setOnClickListener(v -> {
-            String url = this.promo.getBrandURL();
-            if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                url = "https://" + url;
+        this.button.setText(getString(this.owned ? R.string.btn_use_promo : R.string.btn_buy_promo));
+        this.button.setOnClickListener(v -> {
+            if (!this.owned) {
+                this.buyPromo();
             }
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(browserIntent);
+            else {
+                this.usePromo();
+            }
         });
 
         // go back to the previous page when the top tool bar button is clicked
         leftIcon.setVisibility(View.VISIBLE);
         leftIcon.setOnClickListener(v -> ((MainActivity) requireActivity()).hideViewPromo());
+    }
+
+    private void buyPromo() {
+        // Perform backend update
+        UserService userService = UserService.newInstance();
+        userService.updateUserPoints(
+                getContext(),
+                response -> {},
+                -this.promo.getPoints()
+        );
+        userService.addPromoToUser(
+                getContext(),
+                response -> {},
+                this.promo.getId()
+        );
+
+        // Perform frontend update
+        this.owned = true;
+        this.button.setText(getString(R.string.btn_use_promo));
+    }
+
+    private void usePromo() {
+        // Perform backend update
+        UserService.newInstance().usePromo(
+                getContext(),
+                response -> {},
+                this.promo.getId()
+        );
+
+        // Navigate away from promo code
+        ((MainActivity) requireActivity()).hideViewPromo();
+        String url = this.promo.getBrandURL();
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            url = "https://" + url;
+        }
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
     }
 }
