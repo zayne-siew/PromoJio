@@ -15,17 +15,40 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.promojio.R;
+import com.example.promojio.controller.PromoService;
+import com.example.promojio.controller.UserService;
+import com.example.promojio.model.MemberTier;
+import com.example.promojio.model.Promo;
+import com.example.promojio.model.User;
 import com.example.promojio.view.MainActivity;
 import com.example.promojio.view.home.recyclerview.RecyclerViewAdapter;
 import com.example.promojio.view.home.recyclerview.RecyclerViewCardAdapter;
 import com.example.promojio.view.home.viewpager2.ViewPagerAdapter;
 import com.example.promojio.view.home.viewpager2.ZoomOutPageTransformer;
+import com.example.promojio.view.promocode.SubActivitypromocode;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+
+import java.util.HashSet;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private LinearProgressIndicator linearProgressXP, linearProgressCoins;
     private TextView textViewXP, textViewCoins;
+    private RecyclerView recyclerViewCards;
+
+    private final String[] titles = new String[] {
+            "You Might Like",
+            "See Also",
+            "#Trending Right Now",
+            "People's Choice",
+            "Deals Near You",
+            "Sustainability Heroes",
+            "What's Hot",
+            "Brands You Support",
+            "Fresh Deals",
+            "Don't Miss Out"
+    };
 
     private final static String LOG_TAG = "LOGCAT_HomeFragment";
 
@@ -52,39 +75,66 @@ public class HomeFragment extends Fragment {
         viewPagerSummary.setOffscreenPageLimit(adapter.getItemCount());
         viewPagerSummary.setPageTransformer(new ZoomOutPageTransformer());
 
-        // Handle RecyclerView for pseudo-random mini recommendations
-        // TODO populate with actual promo codes
-        RecyclerView recyclerViewCards = (RecyclerView) view.findViewById(R.id.recyclerViewCards);
-        RecyclerViewCardAdapter templateAdapter = new RecyclerViewCardAdapter(
-                new String[]{ "Brand Here", "Brand Here", "Brand Here" },
-                new String[]{ "20% Off 2nd Item", "Free Delivery", "Save $10 with min. $50 purchase" },
-                new int[]{ R.drawable.template_banner, R.drawable.template_banner, R.drawable.template_banner }
-        );
+        // Initialise RecyclerView
+        recyclerViewCards = (RecyclerView) view.findViewById(R.id.recyclerViewCards);
         recyclerViewCards.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewCards.setAdapter(new RecyclerViewAdapter(
-                new String[]{"You Might Like", "See Also"},
-                new RecyclerViewCardAdapter[]{templateAdapter, templateAdapter},
-                position -> ((MainActivity) requireActivity()).selectPage(R.id.mPromos)
-        ));
 
         // Handle progress bar UIs
-        // TODO populate with actual points
         textViewXP = (TextView) view.findViewById(R.id.textViewXP);
         linearProgressXP = (LinearProgressIndicator) view.findViewById(R.id.linearProgressXP);
-        linearProgressXP.setMax(5000);
         textViewCoins = (TextView) view.findViewById(R.id.textViewCoins);
         linearProgressCoins = (LinearProgressIndicator) view.findViewById(R.id.linearProgressCoins);
-        linearProgressCoins.setMax(5000);
+        linearProgressCoins.setMax(10000);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        // Query database for user and promo code information
+        User user = UserService.newInstance(getContext()).getUserByID();
+        List<Promo> allPromos = PromoService.newInstance(getContext()).getAllPromos();
+
         // Display progress bar animations
-        // TODO populate with actual points
-        this.updateProgress(linearProgressXP, textViewXP, 2749);
-        this.updateProgress(linearProgressCoins, textViewCoins, 3941);
+        linearProgressXP.setMax(MemberTier.tierMaxPoints(user.getMemberTier()));
+        this.updateProgress(linearProgressXP, textViewXP, user.getTierPoints());
+        this.updateProgress(linearProgressCoins, textViewCoins, user.getPoints());
+
+        // Handle RecyclerView for pseudo-random mini recommendations
+        // Obtain random number of rows
+        int rows = (int) (Math.random() * 4) + 3;
+        HashSet<String> titleSet = new HashSet<>();
+        while (titleSet.size() < rows) {
+            titleSet.add(this.titles[(int) (Math.random() * this.titles.length)]);
+        }
+        String[] selectedTitles = new String[rows];
+        int j = 0;
+        for (String title: titleSet) {
+            selectedTitles[j++] = title;
+        }
+        RecyclerViewCardAdapter[] adapters = new RecyclerViewCardAdapter[rows];
+        for (int i = 0; i < rows; i++) {
+            // Obtain random number of cards
+            int cards = (int) (Math.random() * 5) + 10;
+            HashSet<Promo> promos = new HashSet<>();
+            while (promos.size() < cards) {
+                promos.add(allPromos.get((int) (Math.random() * allPromos.size())));
+            }
+            // Set adapter for the current row
+            Promo[] selectedPromos = new Promo[cards];
+            j = 0;
+            for (Promo promo: promos) {
+                selectedPromos[j++] = promo;
+            }
+            adapters[i] = new RecyclerViewCardAdapter(selectedPromos, promo -> {
+                ((MainActivity) requireActivity()).showViewPromo(new SubActivitypromocode(promo));
+            });
+        }
+        recyclerViewCards.setAdapter(new RecyclerViewAdapter(
+                selectedTitles,
+                adapters,
+                () -> ((MainActivity) requireActivity()).selectPage(R.id.mPromos)
+        ));
     }
 
     @Override

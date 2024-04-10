@@ -1,5 +1,6 @@
 package com.example.promojio.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -12,6 +13,7 @@ import nl.joery.animatedbottombar.AnimatedBottomBar;
 
 import com.example.promojio.R;
 import com.example.promojio.view.home.HomeFragment;
+import com.example.promojio.view.promocode.SubActivitypromocode;
 import com.example.promojio.view.promocode.promocode_main;
 import com.example.promojio.view.scanner.ScannerFragment;
 import com.example.promojio.view.ui.login.LoginActivity;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private HomeFragment homeFragment;
     private promocode_main promoFragment;
+    private SubActivitypromocode viewPromoFragment;
     private ScannerFragment scannerFragment;
     private SpinWheel spinFragment;
 
@@ -53,6 +56,26 @@ public class MainActivity extends AppCompatActivity {
         spinFragment = new SpinWheel();
 
         initialiseNavBar();
+    }
+
+    public void selectPage(int tabId) {
+        bottomNavigationView.selectTabById(tabId, true);
+    }
+
+    public void showViewPromo(@NonNull SubActivitypromocode viewPromoFragment) {
+        this.viewPromoFragment = viewPromoFragment;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.layoutFrame, viewPromoFragment)
+                .commit();
+    }
+
+    public void hideViewPromo() {
+        viewPromoFragment = null;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.layoutFrame, promoFragment)
+                .commit();
     }
 
     public void notifyTab(int tabId) {
@@ -87,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 temp = homeFragment;
             }
             else if (newTab.getId() == R.id.mPromos) {
-                temp = promoFragment;
+                temp = viewPromoFragment == null ? promoFragment : viewPromoFragment;
             }
             else if (newTab.getId() == R.id.mAdd) {
                 temp = scannerFragment;
