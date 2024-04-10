@@ -10,6 +10,8 @@ public abstract class BrandRenderer {
 
     public final static String BRAND_MCDONALDS = "McDonalds";
 
+    public final static int ERROR_LOGO = -1;
+    public final static String ERROR_URL = "<ERROR>";
     public final static String LOG_TAG = "LOGCAT_BrandRenderer";
 
     public static int getBrandLogo(@NonNull String brandName) {
@@ -18,7 +20,7 @@ public abstract class BrandRenderer {
                 return R.drawable.mcdonald;
             default:
                 Log.e(LOG_TAG, "Unrecognised brand name: " + brandName);
-                return -1;
+                return ERROR_LOGO;
         }
     }
 
@@ -28,7 +30,7 @@ public abstract class BrandRenderer {
                 return "https://www.mcdonalds.com.sg/";
             default:
                 Log.e(LOG_TAG, "Unrecognised brand name: " + brandName);
-                return "";
+                return ERROR_URL;
         }
     }
 }

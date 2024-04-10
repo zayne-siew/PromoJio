@@ -18,7 +18,7 @@ import com.example.promojio.view.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AnimatedBottomBar bottomNavigationView;
+    private static AnimatedBottomBar bottomNavigationView;
 
     private HomeFragment homeFragment;
     private promocode_main promoFragment;
@@ -26,17 +26,25 @@ public class MainActivity extends AppCompatActivity {
     private SpinWheel spinFragment;
 
     private final static String LOG_TAG = "LOGCAT_MainActivity";
-    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Retrieve the Intent from the login activity
-        Intent loginIntent = getIntent();
-        this.userID = loginIntent.getStringExtra(LoginActivity.USER_ID);
-        // TODO query database with user ID
+        // Ensure that there is a defined user service
+        /*if (UserService.newInstance(getApplicationContext()).undefinedUserID()) {
+            // Something went wrong; go back to login page
+            Log.e(LOG_TAG, "Expecting user ID to be set; returning to login page...");
+            Toast.makeText(
+                    getApplicationContext(),
+                    "Something went wrong, returning to login...",
+                    Toast.LENGTH_LONG
+            ).show();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            return;
+        }*/
 
         // Initialise fragments in main activity
         homeFragment = new HomeFragment();
@@ -45,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
         spinFragment = new SpinWheel();
 
         initialiseNavBar();
+    }
+
+    public void notifyTab(int tabId) {
+        bottomNavigationView.setBadgeAtTabId(tabId, new AnimatedBottomBar.Badge());
     }
 
     private void initialiseNavBar() {
@@ -98,11 +110,8 @@ public class MainActivity extends AppCompatActivity {
                     .beginTransaction()
                     .replace(R.id.layoutFrame, temp)
                     .commit();
+            bottomNavigationView.clearBadgeAtTabId(newTab.getId());
             return true;
         });
-    }
-
-    public String getUserID() {
-        return this.userID;
     }
 }
