@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.promojio.R;
+import com.example.promojio.view.MainActivity;
 import com.example.promojio.view.home.recyclerview.RecyclerViewAdapter;
 import com.example.promojio.view.home.recyclerview.RecyclerViewCardAdapter;
 import com.example.promojio.view.home.viewpager2.ViewPagerAdapter;
@@ -61,8 +62,9 @@ public class HomeFragment extends Fragment {
         );
         recyclerViewCards.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewCards.setAdapter(new RecyclerViewAdapter(
-                new String[]{ "You Might Like", "See Also" },
-                new RecyclerViewCardAdapter[]{ templateAdapter, templateAdapter }
+                new String[]{"You Might Like", "See Also"},
+                new RecyclerViewCardAdapter[]{templateAdapter, templateAdapter},
+                position -> ((MainActivity) requireActivity()).selectPage(R.id.mPromos)
         ));
 
         // Handle progress bar UIs
