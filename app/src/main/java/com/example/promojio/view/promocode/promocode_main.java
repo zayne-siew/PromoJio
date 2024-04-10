@@ -5,7 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.promojio.R;
 import com.example.promojio.model.BrandRenderer;
 import com.example.promojio.model.Promo;
+import com.example.promojio.view.MainActivity;
+import com.example.promojio.view.promocode.recyclerview.MyAdapter;
+import com.example.promojio.view.promocode.recyclerview.recyclerview;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,11 +27,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class promocode_main extends Fragment implements recyclerview  {
+public class promocode_main extends Fragment implements recyclerview {
 
     private final static String LOG_TAG = "LOGCAT_promocode_main";
 
-    public promocode_main(){}
+    public promocode_main() {}
 
     @Nullable
     @Override
@@ -47,10 +51,16 @@ public class promocode_main extends Fragment implements recyclerview  {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        TextView textViewToolbar = (TextView) view.findViewById(R.id.toolbartitle);
+        textViewToolbar.setText(R.string.promo_main_title);
+
+        ImageView leftIcon = (ImageView) view.findViewById(R.id.lefticon);
+        leftIcon.setVisibility(View.INVISIBLE);
+
         RecyclerView recyclerView = view.findViewById(R.id.recyclerviewactive);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        List<Promo> items = new ArrayList<>();
 
+        List<Promo> items = new ArrayList<>();
         // TODO testing only; load promo codes from database
         for (int i = 1; i <= 10; i++) {
             JSONObject promoObject = new JSONObject();
@@ -80,21 +90,12 @@ public class promocode_main extends Fragment implements recyclerview  {
 
             items.add(new Promo(promoObject));
         }
-        recyclerView.setAdapter(new MyAdapter(getContext(),items,this));
+        recyclerView.setAdapter(new MyAdapter(items, this));
     }
 
-    //TODO:function when click on the promocode brings user to another page where the details of the promocodes are
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(Promo promo) {
         // what happens when the item is click
-
-        Toast.makeText(getContext(), "Heloo", Toast.LENGTH_SHORT).show();
-        }
+        ((MainActivity) requireActivity()).showViewPromo(new SubActivitypromocode(promo));
     }
-    //TODO: function to go to the website when press the button on the promocode info page to get order
-
-
-
-    //TODO: go back to the previous page when the top tool bar button is clicked
-
-
+}
