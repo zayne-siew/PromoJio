@@ -25,6 +25,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.promojio.R;
+import com.example.promojio.controller.PromoService;
+import com.example.promojio.controller.UserService;
+import com.example.promojio.model.BrandRenderer;
+import com.example.promojio.model.Promo;
+import com.example.promojio.view.MainActivity;
 import com.example.promojio.view.scanner.dropdown.CategoryAdapter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -411,19 +416,90 @@ public class ScannerFragment extends Fragment {
                 Log.e(LOG_TAG, "Date formatter unable to format date: " + strExpiry);
             }
 
-            // TODO submit promo code to database for verification and rewarding
-            Log.i(
-                    LOG_TAG,
-                    "Company: " + company + "\n" +
-                            "Promo ID: " + (promo.isEmpty() ? "<Blank>" : promo) + "\n" +
-                            "Category: " + category + "\n" +
-                            "Expiry: " + (expiry == null ? "<Blank>" : expiry.toString()) + "\n" +
-                            "Short Description: " + shortDesc + "\n" +
-                            "Long Description:\n" + longDesc
+            // Expecting recognised brands for rendering purposes
+            // Reject all other brands
+            company = this.capitalise(company);
+            if (BrandRenderer.getBrandURL(company).equals(BrandRenderer.ERROR_URL)) {
+                Log.w(LOG_TAG, "Unrecognised brand: " + company);
+                Toast.makeText(
+                        getContext(),
+                        "Sorry, company not recognised",
+                        Toast.LENGTH_SHORT
+                ).show();
+                return;
+            }
+
+            /*
+             * Expecting 2 kinds of formats:
+             *   1. XXX yyy... (where XXX contains a number)
+             *      (e.g. 50% off selected items, 1-for-1 product )
+             *      Parse as: { bigLabel: XXX, smallLabel: yyy... }
+             *   2. Buy XX get YYY free
+             *      (e.g. Buy 1 get 1 free)
+             *      Parse as: { bigLabel: Buy XX, smallLabel: Get YYY free }
+             * Reject all other formats
+             */
+            String smallLabel, bigLabel;
+            shortDesc = shortDesc.trim().replaceAll(" +", " ");
+            String[] keywords = shortDesc.split(" ");
+            keywords[0] = this.capitalise(keywords[0]);
+            if (keywords.length > 1 && keywords[0].matches(".*\\d.*")) {
+                bigLabel = keywords[0];
+                smallLabel = shortDesc.substring(shortDesc.indexOf(" ") + 1);
+            }
+            else if (keywords.length >= 5 &&
+                     keywords[0].equals("Buy") &&
+                     keywords[1].matches(".*\\d.*") &&
+                     keywords[2].equalsIgnoreCase("Get") &&
+                     keywords[3].matches(".*\\d.*") &&
+                     keywords[4].equalsIgnoreCase("Free")) {
+                bigLabel = keywords[0] + " " + keywords[1];
+                smallLabel = "Get " + keywords[3] + " free";
+            }
+            else {
+                Log.w(LOG_TAG, "Unrecognised short description: " + shortDesc);
+                Toast.makeText(
+                        getContext(),
+                        "Sorry, short description format not recognised",
+                        Toast.LENGTH_SHORT
+                ).show();
+                return;
+            }
+
+            // Submit promo code to database for verification and rewarding
+            // TODO add category
+            int points = (int) Math.floor(Math.random() * 1000);
+            String promoID = PromoService.newInstance(requireContext()).createPromo(
+                    company,
+                    smallLabel,
+                    bigLabel,
+                    shortDesc,
+                    longDesc,
+                    expiry == null ? "No expiry" : Promo.formatDate(expiry),
+                    points
             );
+            UserService userService = UserService.newInstance(requireContext());
+            if (userService.addPromoToUser(promoID)) {
+                // Update user points and tier points with value of promo code
+                userService.updateUserPoints(points);
+                userService.updateUserTierPoints(points);
+
+                // Notify user of successful addition to promo code
+                Toast.makeText(
+                        getContext(),
+                        "Promo code registration successful!",
+                        Toast.LENGTH_SHORT
+                ).show();
+                ((MainActivity) requireActivity()).notifyTab(R.id.mPromos);
+            }
 
             // Clear user input
             this.clearForm();
         });
+    }
+
+    @NonNull
+    private String capitalise(@NonNull String word) {
+        return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
     }
 }

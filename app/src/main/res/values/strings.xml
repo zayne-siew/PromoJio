@@ -86,4 +86,11 @@
     <string name="prompt_short_desc">Short Description <font color='#FF0000'>*</font></string>
     <string name="prompt_long_desc">Long Description <font color='#FF0000'>*</font></string>
 
+    <!-- Spinner Wheel -->
+    <string name="title_fragment_spinner">Lucky Spin!</string>
+    <string name="content_outer_wheel">Outer Wheel</string>
+    <string name="content_inner_wheel">Inner Wheel</string>
+    <string name="content_pointer">Pointer</string>
+    <string name="prompt_spin">Spin</string>
+
 </resources>

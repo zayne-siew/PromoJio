@@ -77,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.layoutFrame, promoFragment)
                 .commit();
+    
+    public void notifyTab(int tabId) {
+        bottomNavigationView.setBadgeAtTabId(tabId, new AnimatedBottomBar.Badge());
     }
 
     private void initialiseNavBar() {
@@ -130,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     .beginTransaction()
                     .replace(R.id.layoutFrame, temp)
                     .commit();
+            bottomNavigationView.clearBadgeAtTabId(newTab.getId());
             return true;
         });
     }

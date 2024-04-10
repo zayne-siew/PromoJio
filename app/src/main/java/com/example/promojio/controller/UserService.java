@@ -25,8 +25,8 @@ public class UserService extends BaseService {
 
     private static UserService instance;
 
-    private User user;
     private String userID;
+    private String username;
     private String password;
 
     private final static String LOG_TAG = "LOGCAT_UserService";
@@ -97,22 +97,22 @@ public class UserService extends BaseService {
         }
         try {
             JSONObject user = result.getJSONObject("user");
-            if (this.user == null) {
+            if (this.username == null) {
+                this.username = user.getString("username");
                 this.password = user.getString("password");
-                this.user = new User(user);
             }
             return true;
         }
         catch (JSONException e) {
             Log.e(LOG_TAG, "Unable to obtain user ID due to error: " + e);
+            this.username = null;
             this.password = null;
-            this.user = null;
             return false;
         }
     }
 
     public User getUserByID() {
-        if (this.undefinedUserID() || this.undefinedUser()) {
+        if (this.undefinedUserID() || this.unauthenticatedUser()) {
             return null;
         }
 
@@ -136,7 +136,7 @@ public class UserService extends BaseService {
     }
 
     public boolean updateUserPoints(int points) {
-        if (this.undefinedUserID() || this.undefinedUser()) {
+        if (this.undefinedUserID() || this.unauthenticatedUser()) {
             return false;
         }
 
@@ -167,7 +167,7 @@ public class UserService extends BaseService {
     }
 
     public boolean updateUserTierPoints(int tierPoints) {
-        if (this.undefinedUserID() || this.undefinedUser()) {
+        if (this.undefinedUserID() || this.unauthenticatedUser()) {
             return false;
         }
 
@@ -198,7 +198,7 @@ public class UserService extends BaseService {
     }
 
     public boolean addPromoToUser(String promoID) {
-        if (this.undefinedUserID() || this.undefinedUser()) {
+        if (this.undefinedUserID() || this.unauthenticatedUser()) {
             return false;
         }
 
@@ -256,25 +256,51 @@ public class UserService extends BaseService {
         return userPromos;
     }
 
-    private boolean undefinedUserID() {
+    public List<User> getLeaderboard() {
+        List<User> leaders = new ArrayList<>();
+        if (this.undefinedUserID() || this.unauthenticatedUser()) {
+            return leaders;
+        }
+
+        JSONObject result = this.handleRequest(
+                Request.Method.POST,
+                "/user/leaderboard",
+                this.getAuthHeaders(),
+                null
+        );
+        if (result != null) {
+            try {
+                JSONArray users = result.getJSONArray("leaderboard");
+                for (int i = 0; i < users.length(); i++) {
+                    leaders.add(new User((JSONObject) users.get(i)));
+                }
+            }
+            catch (JSONException e) {
+                Log.e(LOG_TAG, "Unable to obtain leaderboard due to error: " + e);
+            }
+        }
+        return leaders;
+    }
+
+    public boolean undefinedUserID() {
         if (this.userID == null) {
             Log.w(LOG_TAG, "User ID undefined");
         }
         return this.userID == null;
     }
 
-    private boolean undefinedUser() {
-        if (this.user == null || this.password == null) {
-            Log.w(LOG_TAG, "User undefined");
+    private boolean unauthenticatedUser() {
+        if (this.username == null || this.password == null) {
+            Log.w(LOG_TAG, "User not authenticated");
         }
-        return this.user == null || this.password == null;
+        return this.username == null || this.password == null;
     }
 
     @NonNull
     private Map<String, String> getAuthHeaders() {
         Map<String, String> authHeaders = new HashMap<>();
-        if (!this.undefinedUser()) {
-            authHeaders.put("username", this.user.getUsername());
+        if (!this.unauthenticatedUser()) {
+            authHeaders.put("username", this.username);
             authHeaders.put("password", this.password);
         }
         return authHeaders;
