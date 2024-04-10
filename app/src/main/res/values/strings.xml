@@ -2,12 +2,23 @@
 
     <string name="app_name">PromoJio</string>
 
+    <!-- Loading page -->
+    <string name="title_loading">PromoJio!</string>
+    <string name="app_tagline">Don\'t Say BOJIO!</string>
+
+    <!-- Register activity -->
+    <string name="title_activity_register">Hello There!</string>
+    <string name="register_tagline">Let\'s Get Started</string>
+
     <!-- Login activity -->
     <string name="title_activity_login">Login Page</string>
-    <string name="title_activity_register">Register Page</string>
+    <string name="app_logo">App Logo</string>
+
+    <string name="welcome_back">Welcome Back</string>
+    <string name="prompt_login">Please, Log In.</string>
 
     <string name="prompt_name">Name</string>
-    <string name="prompt_email">Email</string>
+    <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_new_password">Create Password</string>
 
@@ -15,7 +26,7 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_register_in_short">Register</string>
 
-    <string name="welcome">"Welcome !"</string>
+    <string name="welcome">"Welcome!"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>

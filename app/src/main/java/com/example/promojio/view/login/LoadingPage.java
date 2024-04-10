@@ -1,4 +1,4 @@
-package com.example.promojio.view;
+package com.example.promojio.view.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.example.promojio.R;
-import com.example.promojio.view.ui.login.LoginActivity;
 
 public class LoadingPage extends AppCompatActivity {
 
@@ -19,12 +18,9 @@ public class LoadingPage extends AppCompatActivity {
         }
         setContentView(R.layout.activity_loading_page);
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(LoadingPage.this, LoginActivity.class));
-                finish();
-            }
+        handler.postDelayed(() -> {
+            startActivity(new Intent(LoadingPage.this, LoginActivity.class));
+            finish();
         },3000);
     }
 }

@@ -7,32 +7,32 @@
     android:layout_height="match_parent"
     android:background="@color/purple_500"
     android:gravity="center"
-    tools:context=".view.LoadingPage">
+    tools:context=".view.login.LoadingPage">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_discount_100"
-        />
+        android:contentDescription="@string/app_logo" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="PromoJio!"
+        android:fontFamily="@font/manrope_bold"
+        android:text="@string/title_loading"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="50dp"
-        android:textStyle="bold"
-        />
+        android:textSize="50sp"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Don't say BOJIO!"
-        android:textColor="@color/white"
-        android:textSize="30dp"
-        android:textStyle="bold|italic"
+        android:fontFamily="@font/manrope_medium"
+        android:text="@string/app_tagline"
         android:textAlignment="center"
-        />
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold|italic" />
 
 </LinearLayout>
