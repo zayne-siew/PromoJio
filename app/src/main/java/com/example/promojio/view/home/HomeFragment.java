@@ -37,8 +37,12 @@ import java.util.HashSet;
 
 public class HomeFragment extends Fragment {
 
-    private LinearProgressIndicator linearProgressXP, linearProgressCoins;
-    private TextView textViewXP, textViewCoins;
+    private LinearProgressIndicator linearProgressXP;
+    private LinearProgressIndicator linearProgressCoins;
+    private TextView textViewXP;
+    private TextView textViewCoins;
+    private TextView textViewName;
+    private TextView textViewUsername;
     private RecyclerView recyclerViewCards;
 
     private final String[] titles = new String[] {
@@ -72,6 +76,9 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        textViewName = (TextView) view.findViewById(R.id.textViewName);
+        textViewUsername = (TextView) view.findViewById(R.id.textViewUsername);
+
         // Handle ViewPager2 for front-page summaries
         // TODO populate summary fragments
         ViewPager2 viewPagerSummary = (ViewPager2) view.findViewById(R.id.viewPagerSummary);
@@ -92,6 +99,7 @@ public class HomeFragment extends Fragment {
         linearProgressCoins.setMax(2000);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onResume() {
         super.onResume();
@@ -103,6 +111,10 @@ public class HomeFragment extends Fragment {
                     try {
                         JSONObject userObject = response.getJSONObject("user");
                         User user = new User(userObject);
+
+                        // Display user details
+                        textViewName.setText(user.getName());
+                        textViewUsername.setText("@" + user.getUsername());
 
                         // Display progress bar animations
                         linearProgressXP.setMax(MemberTier.tierMaxPoints(user.getMemberTier()));
