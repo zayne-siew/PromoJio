@@ -38,14 +38,14 @@ public abstract class BrandRenderer {
     public final static String BRAND_FERRARI = "Ferrari";
     public final static String BRAND_FORD = "Ford";
     public final static String BRAND_GAP = "Gap";
-    public final static String BRAND_GENERAL_ELECTRIC = "General Electric";
+    public final static String BRAND_GENERAL_ELECTRIC = "General Electric (GE)";
     public final static String BRAND_GENERAL_MILLS = "General Mills";
     public final static String BRAND_GENERAL_MOTORS = "General Motors";
     public final static String BRAND_GOLDMAN_SACHS = "Goldman Sachs";
     public final static String BRAND_GOOGLE = "Google";
     public final static String BRAND_GUCCI = "Gucci";
     public final static String BRAND_HM = "H&M";
-    public final static String BRAND_HEWLETT_PACKARD = "Hewlett Packard";
+    public final static String BRAND_HEWLETT_PACKARD = "Hewlett Packard Enterprise (HPE)";
     public final static String BRAND_HONDA = "Honda";
     public final static String BRAND_HP = "HP";
     public final static String BRAND_HUAWEI = "Huawei";

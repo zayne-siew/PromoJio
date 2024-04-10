@@ -17,6 +17,7 @@ public class Promo implements Comparable<Promo> {
 
     private String id;
     // private Binary logoImage;
+    private String category;
     private String shortDescription;
     private String longDescription;
     private int points;
@@ -36,6 +37,7 @@ public class Promo implements Comparable<Promo> {
         try {
             this.id = promoObject.getString("id");
             this.brandName = promoObject.getString("brand");
+            this.category = promoObject.getString("category");
             // this.logoImage = promoObject.getBinary("logoImage");
             this.discountDescription = promoObject.getString("smallLabel");
             this.discountValue = promoObject.getString("bigLabel");
@@ -72,19 +74,19 @@ public class Promo implements Comparable<Promo> {
     }
 
     public String getExpiryDate() {
-        return expiryDate;
+        return this.expiryDate;
     }
 
     public String getDiscountValue() {
-        return discountValue;
+        return this.discountValue;
     }
 
     public String getDiscountDescription() {
-        return discountDescription;
+        return this.discountDescription;
     }
 
     public String getBrandName() {
-        return brandName;
+        return this.brandName;
     }
 
     public int getBrandLogo() {
@@ -93,6 +95,10 @@ public class Promo implements Comparable<Promo> {
 
     public String getBrandURL() {
         return BrandRenderer.getBrandURL(this.brandName);
+    }
+
+    public String getCategory() {
+        return this.category;
     }
 
     public String getShortDescription() {

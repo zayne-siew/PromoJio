@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserService extends BaseService {
+public class UserService {
 
     private static UserService instance;
 
@@ -31,19 +31,22 @@ public class UserService extends BaseService {
 
     private final static String LOG_TAG = "LOGCAT_UserService";
 
-    private UserService(Context context) {
-        super(context);
-    }
+    private UserService() {}
 
-    public static UserService newInstance(Context context) {
-        if (UserService.instance != null) {
-            return UserService.instance;
+    public static UserService newInstance() {
+        if (UserService.instance == null) {
+            UserService.instance = new UserService();
         }
-        UserService.instance = new UserService(context);
         return UserService.instance;
     }
 
-    public boolean registerUser(String name, String username, String password) {
+    public void registerUser(
+            Context context,
+            VolleyResponseListener listener,
+            String name,
+            String username,
+            String password
+    ) {
         JSONObject userObj = new JSONObject();
         try {
             userObj.put("name", name);
@@ -54,29 +57,21 @@ public class UserService extends BaseService {
             Log.e(LOG_TAG, "Unable to build user JSONObject: " + e);
         }
 
-        JSONObject result = this.handleRequest(
+        VolleyService.newInstance(context).handleRequest(
                 Request.Method.POST,
                 "/user/register",
                 null,
-                userObj
+                userObj,
+                listener
         );
-        if (result == null) {
-            return false;
-        }
-        try {
-            JSONObject user = result.getJSONObject("user");
-            if (this.userID == null) {
-                this.userID = user.getString("id");
-            }
-            return true;
-        }
-        catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to obtain user ID due to error: " + e);
-            return false;
-        }
     }
 
-    public boolean userLogin(String username, String password) {
+    public void userLogin(
+            Context context,
+            VolleyResponseListener listener,
+            String username,
+            String password
+    ) {
         JSONObject loginObj = new JSONObject();
         try {
             loginObj.put("username", username);
@@ -86,58 +81,58 @@ public class UserService extends BaseService {
             Log.e(LOG_TAG, "Unable to build login JSONObject: " + e);
         }
 
-        JSONObject result = this.handleRequest(
+        VolleyService.newInstance(context).handleRequest(
                 Request.Method.POST,
                 "/user/login",
                 null,
-                loginObj
+                loginObj,
+                response -> {
+                    try {
+                        JSONObject user = response.getJSONObject("user");
+                        if (this.username == null) {
+                            this.userID = user.getString("id");
+                            this.username = user.getString("username");
+                            this.password = user.getString("password");
+                        }
+                        listener.onResponse(response);
+                    }
+                    catch (JSONException e) {
+                        Log.e(LOG_TAG, "Unable to obtain user ID due to error: " + e);
+                        this.userID = null;
+                        this.username = null;
+                        this.password = null;
+                        listener.onResponse(null);
+                    }
+                }
         );
-        if (result == null) {
-            return false;
-        }
-        try {
-            JSONObject user = result.getJSONObject("user");
-            if (this.username == null) {
-                this.username = user.getString("username");
-                this.password = user.getString("password");
-            }
-            return true;
-        }
-        catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to obtain user ID due to error: " + e);
-            this.username = null;
-            this.password = null;
-            return false;
-        }
     }
 
-    public User getUserByID() {
-        if (this.undefinedUserID() || this.unauthenticatedUser()) {
-            return null;
+    public void getUserByID(
+            Context context,
+            VolleyResponseListener listener
+    ) {
+        if (this.unauthenticatedUser()) {
+            Log.e(LOG_TAG, "Not authorised to perform function getUserByID()");
+            return;
         }
 
-        JSONObject result = this.handleRequest(
+        VolleyService.newInstance(context).handleRequest(
                 Request.Method.GET,
                 "/user/" + this.userID,
                 this.getAuthHeaders(),
-                null
+                null,
+                listener
         );
-        if (result == null) {
-            return null;
-        }
-        try {
-            JSONObject userObject = result.getJSONObject("user");
-            return new User(userObject);
-        }
-        catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to obtain User due to error: " + e);
-            return null;
-        }
     }
 
-    public boolean updateUserPoints(int points) {
-        if (this.undefinedUserID() || this.unauthenticatedUser()) {
-            return false;
+    public void updateUserPoints(
+            Context context,
+            VolleyResponseListener listener,
+            int points
+    ) {
+        if (this.unauthenticatedUser()) {
+            Log.e(LOG_TAG, "Not authorised to perform function updateUserPoints()");
+            return;
         }
 
         JSONObject updateObj = new JSONObject();
@@ -148,27 +143,23 @@ public class UserService extends BaseService {
             Log.e(LOG_TAG, "Unable to build update JSONObject: " + e);
         }
 
-        JSONObject result = this.handleRequest(
+        VolleyService.newInstance(context).handleRequest(
                 Request.Method.PATCH,
                 "/user/" + this.userID + "/update/points",
                 this.getAuthHeaders(),
-                updateObj
+                updateObj,
+                listener
         );
-        if (result == null) {
-            return false;
-        }
-        try {
-            return result.getBoolean("updated");
-        }
-        catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to obtain updated status due to error: " + e);
-            return false;
-        }
     }
 
-    public boolean updateUserTierPoints(int tierPoints) {
-        if (this.undefinedUserID() || this.unauthenticatedUser()) {
-            return false;
+    public void updateUserTierPoints(
+            Context context,
+            VolleyResponseListener listener,
+            int tierPoints
+    ) {
+        if (this.unauthenticatedUser()) {
+            Log.e(LOG_TAG, "Not authorised to perform function updateUserTierPoints()");
+            return;
         }
 
         JSONObject updateObj = new JSONObject();
@@ -179,27 +170,23 @@ public class UserService extends BaseService {
             Log.e(LOG_TAG, "Unable to build update JSONObject: " + e);
         }
 
-        JSONObject result = this.handleRequest(
+        VolleyService.newInstance(context).handleRequest(
                 Request.Method.PATCH,
                 "/user/" + this.userID + "/update/tierpoints",
                 this.getAuthHeaders(),
-                updateObj
+                updateObj,
+                listener
         );
-        if (result == null) {
-            return false;
-        }
-        try {
-            return result.getBoolean("updated");
-        }
-        catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to obtain updated status due to error: " + e);
-            return false;
-        }
     }
 
-    public boolean addPromoToUser(String promoID) {
-        if (this.undefinedUserID() || this.unauthenticatedUser()) {
-            return false;
+    public void addPromoToUser(
+            Context context,
+            VolleyResponseListener listener,
+            String promoID
+    ) {
+        if (this.unauthenticatedUser()) {
+            Log.e(LOG_TAG, "Not authorised to perform function addPromoToUser()");
+            return;
         }
 
         JSONObject promoObj = new JSONObject();
@@ -210,90 +197,116 @@ public class UserService extends BaseService {
             Log.e(LOG_TAG, "Unable to build promo JSONObject: " + e);
         }
 
-        JSONObject result = this.handleRequest(
+        VolleyService.newInstance(context).handleRequest(
                 Request.Method.POST,
                 "/user/" + this.userID + "/add/promo",
                 this.getAuthHeaders(),
-                promoObj
+                promoObj,
+                listener
         );
-        if (result == null) {
-            return false;
-        }
-        try {
-            return result.getBoolean("updated");
-        }
-        catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to obtain updated status due to error: " + e);
-            return false;
-        }
     }
 
-    public List<Promo> getUserPromos() {
-        List<Promo> userPromos = new ArrayList<>();
-        if (this.undefinedUserID() || this.undefinedUser()) {
-            return userPromos;
+    public void userCreatesPromo(
+            Context context,
+            VolleyResponseListener listener,
+            String company,
+            String smallLabel,
+            String bigLabel,
+            String category,
+            String shortDescription,
+            String longDescription,
+            String validity,
+            int points
+    ) {
+        if (this.unauthenticatedUser()) {
+            Log.e(LOG_TAG, "Not authorised to perform function userCreatesPromo()");
+            return;
         }
 
-        JSONObject result = this.handleRequest(
+        JSONObject promoObj = new JSONObject();
+        try {
+            promoObj.put("brand", company);
+            promoObj.put("smallLabel", smallLabel);
+            promoObj.put("bigLabel", bigLabel);
+            promoObj.put("category", category);
+            promoObj.put("shortDescription", shortDescription);
+            promoObj.put("longDescription", longDescription);
+            promoObj.put("validity", validity);
+            promoObj.put("points", points);
+        }
+        catch (JSONException e) {
+            Log.e(LOG_TAG, "Unable to build promo JSONObject: " + e);
+        }
+
+        VolleyService.newInstance(context).handleRequest(
+                Request.Method.POST,
+                "/user/" + this.userID + "/create/promo",
+                this.getAuthHeaders(),
+                promoObj,
+                listener
+        );
+    }
+
+    public void usePromo(
+            Context context,
+            VolleyResponseListener listener,
+            String promoID
+    ) {
+        if (this.unauthenticatedUser()) {
+            Log.e(LOG_TAG, "Not authorised to perform function usePromo()");
+            return;
+        }
+
+        VolleyService.newInstance(context).handleRequest(
+                Request.Method.POST,
+                "/user/" + this.userID + "/use/promo/" + promoID,
+                this.getAuthHeaders(),
+                null,
+                listener
+        );
+    }
+
+    public void getUserPromos(
+            Context context,
+            VolleyResponseListener listener
+    ) {
+        if (this.unauthenticatedUser()) {
+            Log.e(LOG_TAG, "Not authorised to perform function getUserPromos()");
+            return;
+        }
+
+        VolleyService.newInstance(context).handleRequest(
                 Request.Method.GET,
                 "/user/" + this.userID,
                 this.getAuthHeaders(),
-                null
+                null,
+                listener
         );
-        if (result == null) {
-            return userPromos;
-        }
-        try {
-            JSONArray promoArray = result.getJSONObject("user").getJSONArray("promos");
-            for (int i = 0; i < promoArray.length(); i++) {
-                userPromos.add(new Promo((JSONObject) promoArray.get(i)));
-            }
-        }
-        catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to obtain promos due to error: " + e);
-        }
-
-        return userPromos;
     }
 
-    public List<User> getLeaderboard() {
-        List<User> leaders = new ArrayList<>();
-        if (this.undefinedUserID() || this.unauthenticatedUser()) {
-            return leaders;
+    public void getLeaderboard(
+            Context context,
+            VolleyResponseListener listener
+    ) {
+        if (this.unauthenticatedUser()) {
+            Log.e(LOG_TAG, "Not authorised to perform function getLeaderboard()");
+            return;
         }
 
-        JSONObject result = this.handleRequest(
+        VolleyService.newInstance(context).handleRequest(
                 Request.Method.POST,
                 "/user/leaderboard",
                 this.getAuthHeaders(),
-                null
+                null,
+                listener
         );
-        if (result != null) {
-            try {
-                JSONArray users = result.getJSONArray("leaderboard");
-                for (int i = 0; i < users.length(); i++) {
-                    leaders.add(new User((JSONObject) users.get(i)));
-                }
-            }
-            catch (JSONException e) {
-                Log.e(LOG_TAG, "Unable to obtain leaderboard due to error: " + e);
-            }
-        }
-        return leaders;
     }
 
-    public boolean undefinedUserID() {
-        if (this.userID == null) {
-            Log.w(LOG_TAG, "User ID undefined");
-        }
-        return this.userID == null;
-    }
-
-    private boolean unauthenticatedUser() {
-        if (this.username == null || this.password == null) {
+    public boolean unauthenticatedUser() {
+        if (this.userID == null || this.username == null || this.password == null) {
             Log.w(LOG_TAG, "User not authenticated");
         }
-        return this.username == null || this.password == null;
+        return this.userID == null || this.username == null || this.password == null;
     }
 
     @NonNull
