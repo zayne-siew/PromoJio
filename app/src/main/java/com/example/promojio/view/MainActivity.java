@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.layoutFrame, promoFragment)
                 .commit();
-    
+    }
+
     public void notifyTab(int tabId) {
         bottomNavigationView.setBadgeAtTabId(tabId, new AnimatedBottomBar.Badge());
     }
