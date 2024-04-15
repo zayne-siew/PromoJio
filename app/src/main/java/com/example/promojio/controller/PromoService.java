@@ -99,7 +99,7 @@ public abstract class PromoService {
     ) {
         VolleyService.newInstance(context).handleRequest(
                 Request.Method.GET,
-                "/promo/random?min=" + min + "?max=" + max,
+                "/promo/random?min=" + min + "&max=" + max,
                 null,
                 null,
                 listener
