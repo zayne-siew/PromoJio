@@ -29,6 +29,8 @@ public class UserService {
     private String username;
     private String password;
 
+    private boolean loggedin = false;
+
     private final static String LOG_TAG = "LOGCAT_UserService";
 
     private UserService() {}
@@ -93,6 +95,8 @@ public class UserService {
                             this.userID = user.getString("id");
                             this.username = user.getString("username");
                             this.password = user.getString("password");
+                            Log.d(LOG_TAG, "userLogin: user just logged in");
+                            this.loggedin = true;
                         }
                         listener.onResponse(response);
                     }
@@ -335,5 +339,9 @@ public class UserService {
             Log.e(LOG_TAG, "Unable to encrypt password due to error: " + e);
             return "";
         }
+    }
+
+    public boolean isLoggedIn() {
+        return this.loggedin;
     }
 }

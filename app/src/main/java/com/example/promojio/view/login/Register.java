@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,19 +24,30 @@ public class Register extends AppCompatActivity {
 
     private final static String LOG_TAG = "LOGCAT_Register";
 
+    private SharedPreferences mPreferences;
+    private String loginSharedPrefFile = "com.example.android.loginsharedprefs";
+    public static final String USER_KEY = "User_Key";
+    public static final String PASS_KEY = "Pass_Key";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        mPreferences = getSharedPreferences(loginSharedPrefFile, MODE_PRIVATE);
+        String user_text = mPreferences.getString(USER_KEY,"");
+        String pass_text = mPreferences.getString(PASS_KEY,"");
+
         final TextInputEditText nameEditText = (TextInputEditText) findViewById(R.id.name);
         final TextInputEditText usernameEditText = (TextInputEditText) findViewById(R.id.username);
-        final TextInputLayout passwordInputLayout =
-                (TextInputLayout) findViewById(R.id.setPasswordLayout);
+        final TextInputLayout passwordInputLayout = (TextInputLayout) findViewById(R.id.setPasswordLayout);
         final TextInputEditText passwordEditText = (TextInputEditText) findViewById(R.id.password);
 
         final Button registerButton = (Button) findViewById(R.id.register);
         final ProgressBar loadingProgressBar = (ProgressBar) findViewById(R.id.loading);
+
+        usernameEditText.setText(user_text);
+        passwordEditText.setText(pass_text);
 
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
