@@ -20,13 +20,11 @@ import java.util.List;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewholderclass> {
 
     private final recyclerview recyclerviewinterface;
-    List<Promo> item;
-    //DataSource dataSource;
+    private final List<Promo> item;
 
     public MyAdapter(List<Promo> item, recyclerview recyclerviewinterface) {
         this.item = item;
         this.recyclerviewinterface = recyclerviewinterface;
-
     }
 
     @NonNull
@@ -74,7 +72,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewholderclass>
             this.brand_name.setText(promo.getBrandName());
             String expiry = promo.getExpiryDate();
             this.expirydate.setText(
-                    expiry.isEmpty() ? "This promo code does not expire" : "Expires " + expiry
+                    expiry.equals("null") ? "This promo code does not expire" : "Expires " + expiry
             );
             this.free_off.setText(promo.getDiscountDescription());
             this.cardview.setOnClickListener(v -> listener.onItemClick(promo));

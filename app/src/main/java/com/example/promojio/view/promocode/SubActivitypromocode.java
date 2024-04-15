@@ -88,7 +88,7 @@ public class SubActivitypromocode extends Fragment {
         userService.updateUserPoints(
                 getContext(),
                 response -> {},
-                this.promo.getPoints()
+                -this.promo.getPoints()
         );
         userService.addPromoToUser(
                 getContext(),

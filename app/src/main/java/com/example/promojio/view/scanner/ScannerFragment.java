@@ -30,6 +30,12 @@ import com.example.promojio.model.BrandRenderer;
 import com.example.promojio.model.Promo;
 import com.example.promojio.view.MainActivity;
 import com.example.promojio.view.scanner.dropdown.CategoryAdapter;
+import com.google.android.gms.common.api.OptionalModuleApi;
+import com.google.android.gms.common.moduleinstall.ModuleInstall;
+import com.google.android.gms.common.moduleinstall.ModuleInstallClient;
+import com.google.android.gms.common.moduleinstall.ModuleInstallRequest;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tflite.java.TfLite;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
@@ -156,6 +162,7 @@ public class ScannerFragment extends Fragment {
         // Initialise barcode scanner to scan for QR codes
         BarcodeScannerOptions barcodeScannerOptions = new BarcodeScannerOptions.Builder()
                 .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+                .enableAllPotentialBarcodes()
                 .build();
         barcodeScanner = BarcodeScanning.getClient(barcodeScannerOptions);
     }
@@ -228,12 +235,14 @@ public class ScannerFragment extends Fragment {
     }
 
     private void pickImageGallery() {
+        this.installModules();
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         galleryLauncher.launch(intent);
     }
 
     private void pickImageCamera() {
+        this.installModules();
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Images.Media.TITLE, "QR Code Scanner");
         contentValues.put(MediaStore.Images.Media.DESCRIPTION, "Camera to scan for QR codes");
@@ -269,8 +278,15 @@ public class ScannerFragment extends Fragment {
             InputImage inputImage = InputImage.fromFilePath(requireContext(), this.imageUri);
             barcodeScanner.process(inputImage)
                     .addOnSuccessListener(barcodes -> {
+                        Log.d(
+                                LOG_TAG,
+                                "Barcode scanner processed " + barcodes.size() + " barcodes"
+                        );
                         for (Barcode barcode : barcodes) {
                             // Treat the QR code as containing text and proceed
+                            Log.d(LOG_TAG, "QR Code: "+ barcode.getDisplayValue());
+                            Log.d(LOG_TAG, "Barcode raw value: " + barcode.getRawValue());
+                            Log.d(LOG_TAG, "Code Type: " + barcode.getValueType());
                             if ((
                                     barcode.getValueType() == Barcode.TYPE_TEXT ||
                                             barcode.getValueType() == Barcode.TYPE_UNKNOWN
@@ -343,6 +359,32 @@ public class ScannerFragment extends Fragment {
         return true;
     }
 
+    private void installModules() {
+        ModuleInstallClient moduleInstallClient = ModuleInstall.getClient(requireContext());
+        OptionalModuleApi optionalModuleApi = TfLite.getClient(requireContext());
+
+        OnFailureListener listener = e ->
+                Log.e(LOG_TAG, "Failed to install required modules for scanning");
+
+        moduleInstallClient
+                .areModulesAvailable(optionalModuleApi)
+                .addOnSuccessListener(response -> {
+                    // Check if modules are already present
+                    if (response.areModulesAvailable()) {
+                        Log.d(LOG_TAG, "Scanning modules are available");
+                        return;
+                    }
+
+                    // Ensure that the ML Kit API modules are installed before using
+                    ModuleInstallRequest moduleInstallRequest = ModuleInstallRequest.newBuilder()
+                            .addApi(optionalModuleApi)
+                            .build();
+                    moduleInstallClient.installModules(moduleInstallRequest)
+                            .addOnFailureListener(listener);
+                })
+                .addOnFailureListener(listener);
+    }
+
     private void initialiseImportQRButton(@NonNull View view) {
         MaterialButton buttonImportQR = (MaterialButton) view.findViewById(R.id.buttonImportQR);
         buttonImportQR.setOnClickListener(v -> {
@@ -376,6 +418,7 @@ public class ScannerFragment extends Fragment {
                 this.launchCameraPermission();
                 return;
             }
+
             // Both required permissions have been granted; proceed with using the camera
             pickImageCamera();
         });
@@ -404,7 +447,7 @@ public class ScannerFragment extends Fragment {
             }
 
             // Parse user input
-            DateFormat formatter = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
+            DateFormat formatter = new SimpleDateFormat("d MMM yyyy", Locale.getDefault());
             Date expiry = null;
             try {
                 if (!strExpiry.isEmpty()) {
@@ -417,8 +460,8 @@ public class ScannerFragment extends Fragment {
 
             // Expecting recognised brands for rendering purposes
             // Reject all other brands
-            company = this.capitalise(company);
-            if (BrandRenderer.getBrandURL(company).equals(BrandRenderer.ERROR_URL)) {
+            String formattedCompany = BrandRenderer.getBrandName(company.trim());
+            if (formattedCompany.equals(BrandRenderer.ERROR_NAME)) {
                 Log.w(LOG_TAG, "Unrecognised brand: " + company);
                 Toast.makeText(
                         getContext(),
@@ -477,7 +520,7 @@ public class ScannerFragment extends Fragment {
                         ).show();
                         ((MainActivity) requireActivity()).notifyTab(R.id.mPromos);
                     },
-                    company,
+                    formattedCompany,
                     smallLabel,
                     bigLabel,
                     category,

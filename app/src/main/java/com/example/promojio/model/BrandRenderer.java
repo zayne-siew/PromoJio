@@ -100,6 +100,7 @@ public abstract class BrandRenderer {
 
     public final static int ERROR_LOGO = R.drawable.unknown;
     public final static String ERROR_URL = "<ERROR>";
+    public final static String ERROR_NAME = "<ERROR>";
     public final static String LOG_TAG = "LOGCAT_BrandRenderer";
 
     public static int getBrandLogo(@NonNull String brandName) {
@@ -471,6 +472,280 @@ public abstract class BrandRenderer {
             default:
                 Log.e(LOG_TAG, "Unrecognised brand name: " + brandName);
                 return ERROR_URL;
+        }
+    }
+
+    public static String getBrandName(@NonNull String brandName) {
+        if (brandName.equalsIgnoreCase(BRAND_3M)) {
+            return BRAND_3M;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_ADIDAS)) {
+            return BRAND_ADIDAS;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_AIRBNB)) {
+            return BRAND_AIRBNB;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_AMAZON)) {
+            return BRAND_AMAZON;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_AMERICAN_AIRLINES)) {
+            return BRAND_AMERICAN_AIRLINES;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_AMERICAN_EXPRESS)) {
+            return BRAND_AMERICAN_EXPRESS;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_APPLE)) {
+            return BRAND_APPLE;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_AUDI)) {
+            return BRAND_AUDI;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_BMW)) {
+            return BRAND_BMW;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_BOEING)) {
+            return BRAND_BOEING;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_BURBERRY)) {
+            return BRAND_BURBERRY;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_CALVIN_KLEIN)) {
+            return BRAND_CALVIN_KLEIN;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_CARTIER)) {
+            return BRAND_CARTIER;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_CHANEL)) {
+            return BRAND_CHANEL;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_CHEVROLET)) {
+            return BRAND_CHEVROLET;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_CISCO)) {
+            return BRAND_CISCO;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_COCA_COLA)) {
+            return BRAND_COCA_COLA;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_COLGATE)) {
+            return BRAND_COLGATE;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_COLGATE_PALMOLIVE)) {
+            return BRAND_COLGATE_PALMOLIVE;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_DELL)) {
+            return BRAND_DELL;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_DELTA_AIR)) {
+            return BRAND_DELTA_AIR;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_DISNEY)) {
+            return BRAND_DISNEY;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_EBAY)) {
+            return BRAND_EBAY;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_EMIRATES)) {
+            return BRAND_EMIRATES;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_EXXONMOBIL)) {
+            return BRAND_EXXONMOBIL;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_FACEBOOK)) {
+            return BRAND_FACEBOOK;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_FEDEX)) {
+            return BRAND_FEDEX;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_FERRARI)) {
+            return BRAND_FERRARI;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_FORD)) {
+            return BRAND_FORD;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_GAP)) {
+            return BRAND_GAP;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_GENERAL_ELECTRIC)) {
+            return BRAND_GENERAL_ELECTRIC;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_GENERAL_MILLS)) {
+            return BRAND_GENERAL_MILLS;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_GENERAL_MOTORS)) {
+            return BRAND_GENERAL_MOTORS;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_GOLDMAN_SACHS)) {
+            return BRAND_GOLDMAN_SACHS;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_GOOGLE)) {
+            return BRAND_GOOGLE;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_GUCCI)) {
+            return BRAND_GUCCI;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_HM)) {
+            return BRAND_HM;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_HEWLETT_PACKARD)) {
+            return BRAND_HEWLETT_PACKARD;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_HONDA)) {
+            return BRAND_HONDA;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_HP)) {
+            return BRAND_HP;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_HUAWEI)) {
+            return BRAND_HUAWEI;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_HYUNDAI)) {
+            return BRAND_HYUNDAI;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_IBM)) {
+            return BRAND_IBM;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_IKEA)) {
+            return BRAND_IKEA;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_INTEL)) {
+            return BRAND_INTEL;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_JOHNSON_JOHNSON)) {
+            return BRAND_JOHNSON_JOHNSON;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_KELLOGGS)) {
+            return BRAND_KELLOGGS;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_KFC)) {
+            return BRAND_KFC;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_KIA)) {
+            return BRAND_KIA;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_LOREAL)) {
+            return BRAND_LOREAL;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_LENOVO)) {
+            return BRAND_LENOVO;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_LG)) {
+            return BRAND_LG;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_LOUIS_VUITTON)) {
+            return BRAND_LOUIS_VUITTON;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_MASTERCARD)) {
+            return BRAND_MASTERCARD;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_MCDONALDS)) {
+            return BRAND_MCDONALDS;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_MERCEDES_BENZ)) {
+            return BRAND_MERCEDES_BENZ;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_MICROSOFT)) {
+            return BRAND_MICROSOFT;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_NESTLE)) {
+            return BRAND_NESTLE;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_NETFLIX)) {
+            return BRAND_NETFLIX;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_NIKE)) {
+            return BRAND_NIKE;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_NISSAN)) {
+            return BRAND_NISSAN;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_ORACLE)) {
+            return BRAND_ORACLE;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_PANASONIC)) {
+            return BRAND_PANASONIC;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_PEPSI)) {
+            return BRAND_PEPSI;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_PEPSICO)) {
+            return BRAND_PEPSICO;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_PFIZER)) {
+            return BRAND_PFIZER;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_PORSCHE)) {
+            return BRAND_PORSCHE;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_PRADA)) {
+            return BRAND_PRADA;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_PROCTER_GAMBLE)) {
+            return BRAND_PROCTER_GAMBLE;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_QUALCOMM)) {
+            return BRAND_QUALCOMM;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_RALPH_LAUREN)) {
+            return BRAND_RALPH_LAUREN;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_ROLEX)) {
+            return BRAND_ROLEX;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_SAMSUNG)) {
+            return BRAND_SAMSUNG;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_SHELL)) {
+            return BRAND_SHELL;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_SIEMENS)) {
+            return BRAND_SIEMENS;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_SONY)) {
+            return BRAND_SONY;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_SOUTHWEST_AIRLINES)) {
+            return BRAND_SOUTHWEST_AIRLINES;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_STARBUCKS)) {
+            return BRAND_STARBUCKS;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_SUBARU)) {
+            return BRAND_SUBARU;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_SUBWAY)) {
+            return BRAND_SUBWAY;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_TARGET)) {
+            return BRAND_TARGET;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_TIFFANY_CO)) {
+            return BRAND_TIFFANY_CO;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_TOMMY_HILFIGER)) {
+            return BRAND_TOMMY_HILFIGER;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_TOYOTA)) {
+            return BRAND_TOYOTA;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_UPS)) {
+            return BRAND_UPS;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_VERIZON)) {
+            return BRAND_VERIZON;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_VISA)) {
+            return BRAND_VISA;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_WALMART)) {
+            return BRAND_WALMART;
+        }
+        else if (brandName.equalsIgnoreCase(BRAND_ZARA)) {
+            return BRAND_ZARA;
+        }
+        else {
+            Log.e(LOG_TAG, "Unrecognised brand name: " + brandName);
+            return ERROR_NAME;
         }
     }
 }
