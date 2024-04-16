@@ -112,6 +112,9 @@ public class UserService {
                 loginObj,
                 response -> {
                     try {
+                        if (response == null) {
+                            throw new JSONException("No JSONObject received");
+                        }
                         JSONObject user = response.getJSONObject("user");
                         if (this.username == null) {
                             this.userID = user.getString("id");

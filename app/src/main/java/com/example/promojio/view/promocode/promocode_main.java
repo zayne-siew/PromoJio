@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,9 +32,14 @@ public class promocode_main extends Fragment {
 
     private RecyclerView recyclerView;
 
-    private final static String LOG_TAG = "LOGCAT_promocode_main";
+    private final List<Promo> items;
+    private String filter;
 
-    public promocode_main() {}
+    private static final String LOG_TAG = "LOGCAT_promocode_main";
+
+    public promocode_main() {
+        this.items = new ArrayList<>();
+    }
 
     @Nullable
     @Override
@@ -61,6 +67,20 @@ public class promocode_main extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerviewactive);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Handle button filtering
+        Button btnAll = (Button) view.findViewById(R.id.btnAll);
+        Button btnFood = (Button) view.findViewById(R.id.btnFood);
+        Button btnShop = (Button) view.findViewById(R.id.btnShop);
+        Button btnTravel = (Button) view.findViewById(R.id.btnTravel);
+        Button btnOther = (Button) view.findViewById(R.id.btnOther);
+
+        btnAll.setOnClickListener(this.createListener(getString(R.string.filter_all)));
+        btnFood.setOnClickListener(this.createListener(getString(R.string.filter_food)));
+        btnShop.setOnClickListener(this.createListener(getString(R.string.filter_shop)));
+        btnTravel.setOnClickListener(this.createListener(getString(R.string.filter_travel)));
+        btnOther.setOnClickListener(this.createListener(getString(R.string.filter_other)));
+        this.filter = getString(R.string.filter_all);
     }
 
     @Override
@@ -72,25 +92,43 @@ public class promocode_main extends Fragment {
                 getContext(),
                 response -> {
                     try {
-                        List<Promo> items = new ArrayList<>();
+                        this.items.clear();
                         JSONArray promoArray = response.getJSONObject("user")
                                                         .getJSONArray("promos");
                         for (int i = 0; i < promoArray.length(); i++) {
                             items.add(new Promo((JSONObject) promoArray.get(i)));
                         }
-
-                        recyclerView.setAdapter(new MyAdapter(
-                                items,
-                                promo -> ((MainActivity) requireActivity())
-                                        .showViewPromo(new SubActivitypromocode(promo, true))
-                        ));
+                        this.update();
                     }
                     catch (JSONException e) {
                         Log.e(LOG_TAG, "Unable to obtain promos due to error: " + e);
                     }
                 }
         );
+    }
 
-        // TODO perform filtering by buttons
+    private View.OnClickListener createListener(String category) {
+        return v -> {
+            filter = category;
+            this.update();
+        };
+    }
+
+    private void update() {
+        // Filter the list of Promo objects by category
+        List<Promo> filteredPromos = new ArrayList<>();
+        for (Promo promo: this.items) {
+            if (this.filter.equals(getString(R.string.filter_all)) ||
+                    promo.getCategory().equalsIgnoreCase(this.filter)) {
+                filteredPromos.add(promo);
+            }
+        }
+
+        // Set the recycler view adapter accordingly
+        recyclerView.setAdapter(new MyAdapter(
+                filteredPromos,
+                promo -> ((MainActivity) requireActivity())
+                        .showViewPromo(new SubActivitypromocode(promo, true))
+        ));
     }
 }

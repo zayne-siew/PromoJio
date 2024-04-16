@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -70,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             UserService.newInstance().userLogin(
                     getApplicationContext(),
                     response -> {
+                        Log.d(LOG_TAG, "Response received: " + response);
                         loadingProgressBar.setVisibility(View.GONE);
                         if (response == null) {
                             Toast.makeText(
