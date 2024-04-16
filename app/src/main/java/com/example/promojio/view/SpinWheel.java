@@ -27,6 +27,7 @@ import java.util.Random;
 
 public class SpinWheel extends Fragment {
 
+    private Button spinButton;
     private ImageView wheelImageView;
 
     private final Random random;
@@ -57,18 +58,20 @@ public class SpinWheel extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         wheelImageView = view.findViewById(R.id.wheelImageView);
-        Button spinButton = view.findViewById(R.id.spinButton);
-
+        spinButton = view.findViewById(R.id.spinButton);
         spinButton.setOnClickListener(v -> spinWheel());
     }
 
     private void spinWheel() {
+        // Disable the button before spinning
+        spinButton.setEnabled(false);
+
+        // Calculate the amount to spin the wheel by
         int angle = 360*12 + (random.nextInt(360) + 1); // Ensures at least 4 rotations, plus a random amount.
-
         Log.d(LOG_TAG, "angle: " + angle);
-
         long lastSpinDuration = 3000 + random.nextInt(2000); // Duration between 3 and 5 seconds
 
+        // Animate the wheel spinning
         ObjectAnimator animator = ObjectAnimator.ofFloat(
                 wheelImageView,
                 "rotation",
@@ -83,7 +86,7 @@ public class SpinWheel extends Fragment {
                 // This is called when the animation ends
                 lastAngle += angle;
                 lastAngle = lastAngle % 360; // Keep the angle within 0-359 degrees
-                Log.d("SpinWheel", "Final angle: " + lastAngle);
+                Log.d(LOG_TAG, "Final angle: " + lastAngle);
                 showResultPopup();
             }
         });
@@ -168,5 +171,8 @@ public class SpinWheel extends Fragment {
         builder.setPositiveButton("OK", null);
         AlertDialog dialog = builder.create();
         dialog.show();
+
+        // Re-enable the spin button
+        spinButton.setEnabled(true);
     }
 }
