@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -57,6 +58,19 @@ public class MainActivity extends AppCompatActivity {
         spinFragment = new SpinWheel();
 
         initialiseNavBar();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Store current logged in state into shared preferences
+        SharedPreferences mPreferences = getSharedPreferences(
+                UserService.SHARED_PREFS_NAME,
+                MODE_PRIVATE
+        );
+        UserService.storeToSharedPrefs(mPreferences);
+        Log.d(LOG_TAG, "User instance saved into shared preferences");
     }
 
     public void selectPage(int tabId) {

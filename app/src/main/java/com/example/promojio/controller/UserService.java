@@ -1,24 +1,19 @@
 package com.example.promojio.controller;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.android.volley.Request;
-import com.example.promojio.model.Promo;
-import com.example.promojio.model.User;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class UserService {
@@ -29,7 +24,10 @@ public class UserService {
     private String username;
     private String password;
 
-    private boolean loggedin = false;
+    public static final String SHARED_PREFS_NAME = "com.example.promojio";
+    private final static String USER_ID_KEY = "USER_ID";
+    private final static String USERNAME_KEY = "USERNAME";
+    private final static String PASSWORD_KEY = "PASSWORD";
 
     private final static String LOG_TAG = "LOGCAT_UserService";
 
@@ -40,6 +38,30 @@ public class UserService {
             UserService.instance = new UserService();
         }
         return UserService.instance;
+    }
+
+    public static UserService fromSharedPrefs(SharedPreferences sharedPreferences) {
+        if (UserService.instance == null) {
+            UserService.instance = new UserService();
+        }
+        instance.userID = sharedPreferences.getString(USER_ID_KEY, null);
+        instance.username = sharedPreferences.getString(USERNAME_KEY, null);
+        instance.password = sharedPreferences.getString(PASSWORD_KEY, null);
+        return instance;
+    }
+
+    public static void storeToSharedPrefs(@NonNull SharedPreferences sharedPreferences) {
+        SharedPreferences.Editor preferencesEditor = sharedPreferences.edit();
+        preferencesEditor.putString(USER_ID_KEY, instance.userID);
+        preferencesEditor.putString(USERNAME_KEY, instance.username);
+        preferencesEditor.putString(PASSWORD_KEY, instance.password);
+        preferencesEditor.apply();
+    }
+
+    public static void userLogout() {
+        instance.userID = null;
+        instance.username = null;
+        instance.password = null;
     }
 
     public void registerUser(
@@ -95,16 +117,12 @@ public class UserService {
                             this.userID = user.getString("id");
                             this.username = user.getString("username");
                             this.password = user.getString("password");
-                            Log.d(LOG_TAG, "userLogin: user just logged in");
-                            this.loggedin = true;
                         }
                         listener.onResponse(response);
                     }
                     catch (JSONException e) {
                         Log.e(LOG_TAG, "Unable to obtain user ID due to error: " + e);
-                        this.userID = null;
-                        this.username = null;
-                        this.password = null;
+                        userLogout();
                         listener.onResponse(null);
                     }
                 }
@@ -339,9 +357,5 @@ public class UserService {
             Log.e(LOG_TAG, "Unable to encrypt password due to error: " + e);
             return "";
         }
-    }
-
-    public boolean isLoggedIn() {
-        return this.loggedin;
     }
 }
