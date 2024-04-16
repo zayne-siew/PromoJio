@@ -30,8 +30,7 @@ public class Register extends AppCompatActivity {
 
         final TextInputEditText nameEditText = (TextInputEditText) findViewById(R.id.name);
         final TextInputEditText usernameEditText = (TextInputEditText) findViewById(R.id.username);
-        final TextInputLayout passwordInputLayout =
-                (TextInputLayout) findViewById(R.id.setPasswordLayout);
+        final TextInputLayout passwordInputLayout = (TextInputLayout) findViewById(R.id.setPasswordLayout);
         final TextInputEditText passwordEditText = (TextInputEditText) findViewById(R.id.password);
 
         final Button registerButton = (Button) findViewById(R.id.register);

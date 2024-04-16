@@ -1,9 +1,11 @@
 package com.example.promojio.view.home;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.promojio.R;
@@ -26,6 +29,7 @@ import com.example.promojio.view.home.recyclerview.RecyclerViewAdapter;
 import com.example.promojio.view.home.recyclerview.RecyclerViewCardAdapter;
 import com.example.promojio.view.home.viewpager2.ViewPagerAdapter;
 import com.example.promojio.view.home.viewpager2.ZoomOutPageTransformer;
+import com.example.promojio.view.login.LoadingPage;
 import com.example.promojio.view.promocode.SubActivitypromocode;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -78,6 +82,21 @@ public class HomeFragment extends Fragment {
 
         textViewName = (TextView) view.findViewById(R.id.textViewName);
         textViewUsername = (TextView) view.findViewById(R.id.textViewUsername);
+
+        // Handle logout button image
+        ImageView imageViewUser = (ImageView) view.findViewById(R.id.imageViewUser);
+        imageViewUser.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setTitle("Confirm log out");
+            builder.setMessage("Are you sure you want to log out?");
+            builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+                UserService.userLogout();
+                startActivity(new Intent(getContext(), LoadingPage.class));
+            });
+            builder.setNegativeButton("No", null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
 
         // Handle ViewPager2 for front-page summaries
         // TODO populate summary fragments

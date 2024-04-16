@@ -31,13 +31,18 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         final TextInputEditText usernameEditText = (TextInputEditText) findViewById(R.id.username);
-        final TextInputLayout passwordInputLayout =
-                (TextInputLayout) findViewById(R.id.passwordLayout);
+        final TextInputLayout passwordInputLayout = (TextInputLayout) findViewById(R.id.passwordLayout);
         final TextInputEditText passwordEditText = (TextInputEditText) findViewById(R.id.password);
 
         final Button loginButton = (Button) findViewById(R.id.login);
         final Button registerButton = (Button) findViewById(R.id.register);
         final ProgressBar loadingProgressBar = (ProgressBar) findViewById(R.id.loading);
+
+        boolean validPassword = passwordInputLayout.getLengthCounter().countLength(passwordEditText.getEditableText()) > 5;
+        loginButton.setEnabled(validPassword);
+        passwordInputLayout.setError(
+                validPassword ? null : getString(R.string.invalid_password)
+        );
 
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
