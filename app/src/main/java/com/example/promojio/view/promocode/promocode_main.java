@@ -1,5 +1,6 @@
 package com.example.promojio.view.promocode;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.example.promojio.model.Promo;
 import com.example.promojio.view.MainActivity;
 import com.example.promojio.view.promocode.recyclerview.MyAdapter;
 
+import org.jetbrains.annotations.Contract;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,15 +32,16 @@ import java.util.List;
 
 public class promocode_main extends Fragment {
 
-    private RecyclerView recyclerView;
+    private MyAdapter adapter;
 
-    private final List<Promo> items;
-    private String filter;
+    private final List<Promo> allPromos;
+    private final List<Promo> filteredPromos;
 
     private static final String LOG_TAG = "LOGCAT_promocode_main";
 
     public promocode_main() {
-        this.items = new ArrayList<>();
+        this.allPromos = new ArrayList<>();
+        this.filteredPromos = new ArrayList<>();
     }
 
     @Nullable
@@ -65,8 +68,15 @@ public class promocode_main extends Fragment {
         ImageView leftIcon = (ImageView) view.findViewById(R.id.lefticon);
         leftIcon.setVisibility(View.INVISIBLE);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerviewactive);
+        // Handle recycler view
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerviewactive);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.adapter = new MyAdapter(
+                this.filteredPromos,
+                promo -> ((MainActivity) requireActivity())
+                        .showViewPromo(new SubActivitypromocode(promo, true))
+        );
+        recyclerView.setAdapter(this.adapter);
 
         // Handle button filtering
         Button btnAll = (Button) view.findViewById(R.id.btnAll);
@@ -80,9 +90,9 @@ public class promocode_main extends Fragment {
         btnShop.setOnClickListener(this.createListener(getString(R.string.filter_shop)));
         btnTravel.setOnClickListener(this.createListener(getString(R.string.filter_travel)));
         btnOther.setOnClickListener(this.createListener(getString(R.string.filter_other)));
-        this.filter = getString(R.string.filter_all);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onResume() {
         super.onResume();
@@ -92,13 +102,17 @@ public class promocode_main extends Fragment {
                 getContext(),
                 response -> {
                     try {
-                        this.items.clear();
+                        this.allPromos.clear();
+                        this.filteredPromos.clear();
+
                         JSONArray promoArray = response.getJSONObject("user")
                                                         .getJSONArray("promos");
                         for (int i = 0; i < promoArray.length(); i++) {
-                            items.add(new Promo((JSONObject) promoArray.get(i)));
+                            this.allPromos.add(new Promo((JSONObject) promoArray.get(i)));
                         }
-                        this.update();
+
+                        this.filteredPromos.addAll(this.allPromos);
+                        this.adapter.notifyDataSetChanged();
                     }
                     catch (JSONException e) {
                         Log.e(LOG_TAG, "Unable to obtain promos due to error: " + e);
@@ -107,28 +121,19 @@ public class promocode_main extends Fragment {
         );
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @NonNull
+    @Contract(pure = true)
     private View.OnClickListener createListener(String category) {
         return v -> {
-            filter = category;
-            this.update();
-        };
-    }
-
-    private void update() {
-        // Filter the list of Promo objects by category
-        List<Promo> filteredPromos = new ArrayList<>();
-        for (Promo promo: this.items) {
-            if (this.filter.equals(getString(R.string.filter_all)) ||
-                    promo.getCategory().equalsIgnoreCase(this.filter)) {
-                filteredPromos.add(promo);
+            this.filteredPromos.clear();
+            for (Promo promo: this.allPromos) {
+                if (category.equals(v.getContext().getString(R.string.filter_all)) ||
+                        promo.getCategory().equalsIgnoreCase(category)) {
+                    this.filteredPromos.add(promo);
+                }
             }
-        }
-
-        // Set the recycler view adapter accordingly
-        recyclerView.setAdapter(new MyAdapter(
-                filteredPromos,
-                promo -> ((MainActivity) requireActivity())
-                        .showViewPromo(new SubActivitypromocode(promo, true))
-        ));
+            this.adapter.notifyDataSetChanged();
+        };
     }
 }
