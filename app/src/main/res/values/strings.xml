@@ -57,7 +57,7 @@
     <string name="default_promo_title">20% Off on 2nd Item</string>
     <string name="default_promo_brand">Brand Here</string>
     <string name="default_promo_desc">This is the default promo code description.</string>
-  
+
     <!-- Promo Code Fragment -->
     <string name="promo_main_title">My Promo Codes</string>
     <string name="promo_view_title">View Promo Code</string>
@@ -90,13 +90,13 @@
         <item>WING STOP</item>
         <item>Adidas</item>
         <item>Giant</item>
-        <item >FAIRPRICE</item>
+        <item>FAIRPRICE</item>
         <item>NIKE</item>
         <item>SINGTEL</item>
-        <item >SHOPPEE</item>
-        <item >SHENG SIONG</item>
+        <item>SHOPPEE</item>
+        <item>SHENG SIONG</item>
         <item>SCOOT</item>
-        <item >SINGAPORE AIRLINES</item>
+        <item>SINGAPORE AIRLINES</item>
         <item>VIETNAM AIRLINES</item>
     </string-array>
     <string-array name="expiry" />
@@ -121,5 +121,7 @@
     <string name="content_inner_wheel">Inner Wheel</string>
     <string name="content_pointer">Pointer</string>
     <string name="prompt_spin">Spin</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

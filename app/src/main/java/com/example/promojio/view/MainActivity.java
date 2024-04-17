@@ -15,6 +15,7 @@ import nl.joery.animatedbottombar.AnimatedBottomBar;
 import com.example.promojio.R;
 import com.example.promojio.controller.UserService;
 import com.example.promojio.view.home.HomeFragment;
+import com.example.promojio.view.home.LeaderboardFragment;
 import com.example.promojio.view.promocode.SubActivitypromocode;
 import com.example.promojio.view.promocode.promocode_main;
 import com.example.promojio.view.scanner.ScannerFragment;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private SubActivitypromocode viewPromoFragment;
     private ScannerFragment scannerFragment;
     private SpinWheel spinFragment;
+    private LeaderboardFragment leaderboardFragment;
 
     private final static String LOG_TAG = "LOGCAT_MainActivity";
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         promoFragment = new promocode_main();
         scannerFragment = new ScannerFragment();
         spinFragment = new SpinWheel();
+        leaderboardFragment = new LeaderboardFragment();
 
         initialiseNavBar();
     }
@@ -133,7 +136,9 @@ public class MainActivity extends AppCompatActivity {
             else if (newTab.getId() == R.id.mSpinner) {
                 temp = spinFragment;
             }
-            // TODO: Add other fragments here
+            else if (newTab.getId() == R.id.mLeaderboard) {
+                temp = leaderboardFragment;
+            }
             else {
                 Log.e(LOG_TAG, "Unrecognised fragment: " + newTab.getTitle());
                 Toast.makeText(

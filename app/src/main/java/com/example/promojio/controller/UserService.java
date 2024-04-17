@@ -319,7 +319,7 @@ public class UserService {
         }
 
         VolleyService.newInstance(context).handleRequest(
-                Request.Method.POST,
+                Request.Method.GET,
                 "/user/leaderboard",
                 this.getAuthHeaders(),
                 null,
