@@ -1,4 +1,4 @@
-package com.example.promojio.view.home;
+package com.example.promojio.view.leaderboard;
 
 
 import android.util.Log;

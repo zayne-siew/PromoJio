@@ -15,7 +15,7 @@ import nl.joery.animatedbottombar.AnimatedBottomBar;
 import com.example.promojio.R;
 import com.example.promojio.controller.UserService;
 import com.example.promojio.view.home.HomeFragment;
-import com.example.promojio.view.home.LeaderboardFragment;
+import com.example.promojio.view.leaderboard.LeaderboardFragment;
 import com.example.promojio.view.promocode.SubActivitypromocode;
 import com.example.promojio.view.promocode.promocode_main;
 import com.example.promojio.view.scanner.ScannerFragment;
