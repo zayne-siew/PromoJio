@@ -69,7 +69,6 @@ Introducing PromoJio - the only app that tracks promo codes for you and rewards 
     </td>
   </tr>
   <tr>
-    <td></td>
     <td>
       <div align="center">
         <img src="assets/spin.png" alt="Spinner Page" width="300" />
@@ -77,6 +76,12 @@ Introducing PromoJio - the only app that tracks promo codes for you and rewards 
       </div>
     </td>
     <td></td>
+    <td>
+      <div align="center">
+        <img src="assets/leaderboard.png" alt="Leaderboard Page" width="300" />
+        <p>Leaderboard Page</p>
+      </div>
+    </td>
   </tr>
 </table>
 
